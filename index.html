@@ -778,7 +778,13 @@ function showCrew(c){const d=$('crewDet'),st=stats(),open=isOpen(c,st),sd=sideCr
 tap('crewBack',()=>{$('crewOv').hidden=true});
 setSideButton();
 let last=performance.now();
-function loop(now){const dt=Math.min(.05,(now-last)/1000);last=now;if(S.state!=='paused')update(dt);draw();requestAnimationFrame(loop)}
+let errShown=0;function showErr(e){if(errShown++>2)return;let d=$('errBox');if(!d){d=document.createElement('div');d.id='errBox';d.style.cssText='position:fixed;left:8px;right:8px;bottom:8px;z-index:99;background:#7a1010;color:#fff;font:12px/1.35 sans-serif;padding:6px 9px;border-radius:10px;pointer-events:none';document.body.appendChild(d)}
+  d.textContent='Game error (screenshot this for Claude): '+String(e&&e.message||e).slice(0,160)+' | '+innerWidth+'x'+innerHeight+' '+(navigator.userAgent.match(/(iPhone OS [\d_]+|Android [\d.]+|Chrome\/\d+|Version\/[\d.]+)/g)||[]).join(' ')}
+addEventListener('error',e=>showErr(e.error||e.message));addEventListener('unhandledrejection',e=>{});
+function loop(now){const dt=Math.min(.05,(now-last)/1000);last=now;
+  if((innerWidth!==W||innerHeight!==H)&&innerWidth>0&&innerHeight>0)resize();
+  try{if(S.state!=='paused')update(dt)}catch(e){showErr(e)}try{draw()}catch(e){showErr(e)}requestAnimationFrame(loop)}
+if(window.visualViewport)visualViewport.addEventListener('resize',resize);
 addEventListener('resize',resize);resize();reset();requestAnimationFrame(loop);
 }
 
