@@ -5,13 +5,13 @@
 <link rel="icon" href="data:,">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Waggleton Town</title>
-<meta name="description" content="Outrun the catcher. Rally the crew. Scroll through the world of Mochi the Shih Tzu.">
+<meta name="description" content="Outrun the catcher. Rally the crew. Scroll through the world of Ruby the Shih Tzu.">
 <meta name="theme-color" content="#2a1206">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
 /* VOICE: the game's own world, played like the opening of an animated film. Warm, cheeky, golden.
-   IDEA: your scroll is the film's playhead. One continuous shot: Mochi bolts, Grubb gives chase, the crew joins, Rook flies her over the rooftops.
+   IDEA: your scroll is the film's playhead. One continuous shot: Ruby bolts, Grubb gives chase, the crew joins, Rook flies her over the rooftops.
    PICTURE: full-screen cinematic footage rendered in the game's exact style, with the game's chunky gold type and UI on top.
    COLOUR and TYPE: autumn gold, brick red, cream; Lilita One with gold gradient and dark-brown outline like the game logo; Nunito for small text.
    LAYOUT: fixed film behind, chapter titles fade in over it, then a crew carousel, levels and a big Play button over the sunset. */
@@ -115,7 +115,7 @@ body{overflow-x:clip}
 </head>
 <body>
 <img id="still" alt="" src="">
-<video id="film" muted playsinline preload="auto" aria-label="Mochi runs through New York with her crew"></video>
+<video id="film" muted playsinline preload="auto" aria-label="Ruby runs through Waggleton with her crew"></video>
 <canvas id="leaves"></canvas>
 <div class="vig"></div>
 <div class="shade" id="shade"></div>
@@ -126,10 +126,10 @@ body{overflow-x:clip}
 <div id="bar" class="ui"><i></i></div>
 
 <section class="ch top" id="c0" data-a="-1" data-b=".07"><img src="https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/1b56b6f6-c93e-4eb9-824e-cd611479e859.webp" alt="Waggleton Town"><p>Outrun the catcher. Rally the crew.</p></section>
-<section class="ch bot" data-a=".1" data-b=".24"><span class="tag">Meet Mochi</span><h2 class="gt">One small dog. One big city.</h2><p>A Shih Tzu with a red topknot, an explorer backpack and a plan to see all of Waggleton before teatime.</p></section>
+<section class="ch bot" data-a=".1" data-b=".24"><span class="tag">Meet Ruby</span><h2 class="gt">One small dog. One big city.</h2><p>A Shih Tzu with a red topknot, an explorer backpack and a plan to see all of Waggleton before teatime.</p></section>
 <section class="ch top" data-a=".3" data-b=".44"><span class="tag">Uh-oh</span><h2 class="gt">Officer Grubb!</h2><p>A net, a whistle and a moustache like a broom. Every bump brings him closer.</p></section>
 <section class="ch bot" data-a=".52" data-b=".68"><span class="tag">Rally the crew</span><h2 class="gt">Nobody runs alone</h2><p>Seven street-smart friends, each with a power that turns the chase around.</p></section>
-<section class="ch top" data-a=".76" data-b=".94"><span class="tag">Courier Dash</span><h2 class="gt">Hop on, kid!</h2><p>Rook grabs Mochi by her backpack and flies her over the rooftops.</p></section>
+<section class="ch top" data-a=".76" data-b=".94"><span class="tag">Courier Dash</span><h2 class="gt">Hop on, kid!</h2><p>Rook grabs Ruby by her backpack and flies her over the rooftops.</p></section>
 
 <div id="track"></div>
 
@@ -155,7 +155,7 @@ body{overflow-x:clip}
   </section>
   <section class="sec">
     <span class="tag">Your turn</span>
-    <h2 class="gt">Run with Mochi</h2>
+    <h2 class="gt">Run with Ruby</h2>
     <p class="lead">Play the prototype in your browser, race a friend with an invite link, and watch this space for the app, the cartoon and the toys.</p>
     <div class="row">
       <a class="btn" href="https://scrien01.github.io/mochi-dash./" target="_blank" rel="noopener">▶ Play now</a>
@@ -183,20 +183,20 @@ const film=$('film'),still=$('still');
 still.src=FILM[ori].p;$('loader').style.backgroundImage=`url(${FILM[ori].p})`;
 
 const CREW=[
- {id:'mochi',img:'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/f89ef4be-d7e2-4fc9-963d-41538bba7662.jpg',name:'Mochi',kind:'Shih Tzu · The hero',power:'Explorer Shield',pd:'Her backpack pops up a bubble that blocks one bump.',bio:'Slipped her lead on Brownstone Street and decided the city was far too exciting to leave.',ul:'Playable from the start'},
- {id:'rook',img:'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/3de66c69-f7a1-44d3-a052-cce043b15ad3.jpg',name:'Rook',kind:'Pigeon · Courier',power:'Courier Dash',pd:'Grabs Mochi by the backpack and flies her far down the street.',bio:'The fastest wings in Manhattan. Knows every rooftop shortcut and has never lost a delivery.',ul:'Joins on Brownstone Street'},
- {id:'bandit',img:'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/e3774d65-2c62-4841-9a66-f6915aa60aa7.jpg',name:'Bandit',kind:'Raccoon · Bin raider',power:'Lid Bash',pd:'For 5 seconds Mochi smashes straight through crates, bins and barriers.',bio:'King of the alleys, with a dented bin lid for a shield. Talks big, eats bigger.',ul:'Unlock: collect 150 bones'},
- {id:'nuts',img:'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/edeef22b-ae2b-4684-826b-ee4fbc09a396.jpg',name:'Nuts',kind:'Squirrel · Park scout',power:'Nut Magnet',pd:'Every bone in every lane flies straight to Mochi.',bio:'A hyperactive park scout in flying goggles who has mapped every tree in the city.',ul:'Unlock: 60 bones in one run'},
+ {id:'mochi',img:'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/f89ef4be-d7e2-4fc9-963d-41538bba7662.jpg',name:'Ruby',kind:'Shih Tzu · The hero',power:'Explorer Shield',pd:'Her backpack pops up a bubble that blocks one bump.',bio:'Slipped her lead on Brownstone Street and decided the city was far too exciting to leave.',ul:'Playable from the start'},
+ {id:'rook',img:'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/3de66c69-f7a1-44d3-a052-cce043b15ad3.jpg',name:'Rook',kind:'Pigeon · Courier',power:'Courier Dash',pd:'Grabs Ruby by the backpack and flies her far down the street.',bio:'The fastest wings in Manhattan. Knows every rooftop shortcut and has never lost a delivery.',ul:'Joins on Brownstone Street'},
+ {id:'bandit',img:'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/e3774d65-2c62-4841-9a66-f6915aa60aa7.jpg',name:'Bandit',kind:'Raccoon · Bin raider',power:'Lid Bash',pd:'For 5 seconds Ruby smashes straight through crates, bins and barriers.',bio:'King of the alleys, with a dented bin lid for a shield. Talks big, eats bigger.',ul:'Unlock: collect 150 bones'},
+ {id:'nuts',img:'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/edeef22b-ae2b-4684-826b-ee4fbc09a396.jpg',name:'Nuts',kind:'Squirrel · Park scout',power:'Nut Magnet',pd:'Every bone in every lane flies straight to Ruby.',bio:'A hyperactive park scout in flying goggles who has mapped every tree in the city.',ul:'Unlock: 60 bones in one run'},
  {id:'duchess',img:'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/ccbbc1af-627a-4b83-b13c-4f05fe5cf5b4.jpg',name:'Duchess',kind:'Persian cat · Charmer',power:'Charm',pd:'Bats her eyes at Officer Grubb. Catcher Alert drops to zero.',bio:'A penthouse cat in real pearls who pretends to be too posh to help, then saves the day.',ul:'Unlock: a run with no bumps'},
  {id:'tank',img:'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/8edc4331-3fbe-43a0-8085-a2488c29b209.jpg',name:'Tank',kind:'Newfoundland · Big muscle',power:'Bulldoze',pd:'Charges ahead and clears the way. Nothing can stop you.',bio:'A gentle giant and retired harbour rescue dog. Scared of exactly one thing: the vacuum.',ul:'Unlock: win 3 times'},
- {id:'pip',img:'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/55bdcc99-c903-4ed6-90e7-f15b1644f293.jpg',name:'Pip',kind:'Hamster · Speed demon',power:'Tiny Turbo',pd:'Mochi shrinks to hamster size and zips past every obstacle.',bio:'Escaped from a pet shop in a toy car. Tiny, loud, and sure he is the best driver in Waggleton.',ul:'Unlock: 3 speed ramps in one run'},
+ {id:'pip',img:'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/55bdcc99-c903-4ed6-90e7-f15b1644f293.jpg',name:'Pip',kind:'Hamster · Speed demon',power:'Tiny Turbo',pd:'Ruby shrinks to hamster size and zips past every obstacle.',bio:'Escaped from a pet shop in a toy car. Tiny, loud, and sure he is the best driver in Waggleton.',ul:'Unlock: 3 speed ramps in one run'},
  {id:'grubb',img:'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/39028aeb-7879-4560-a947-5f5d9c90c2e5.jpg',name:'Officer Grubb',kind:'Dog catcher · The villain',power:'The Net',pd:'Every bump fills his Catcher Alert. Hit 100% and he scoops you up.',bio:'Thirty years on the job and he has never caught a dog he could not lose again. This time it is personal.',ul:'Always one step behind',villain:1}];
 const crewEl=$('crew');
 CREW.forEach(c=>{const d=document.createElement('article');d.className='card'+(c.villain?' villain':'');
   d.innerHTML=`<div class="art"><img loading="lazy" alt="${c.name}" src="${c.img}" onerror="this.src='t/crew_${c.id}.webp'"></div><h3>${c.name}</h3><div class="k">${c.kind}</div><div class="pw"><b>${c.power}</b>${c.pd}</div><p>${c.bio}</p><span class="ul">${c.villain?'⚠':'🔓'} ${c.ul}</span>`;crewEl.appendChild(d)});
 const step=()=>crewEl.firstElementChild.getBoundingClientRect().width+18;
 $('prev').onclick=()=>crewEl.scrollBy({left:-step(),behavior:'smooth'});$('next').onclick=()=>crewEl.scrollBy({left:step(),behavior:'smooth'});
-$('wa').href='https://wa.me/?text='+encodeURIComponent('Run with Mochi! 🐶 Waggleton Town. Watch the world and play the prototype: '+location.href.split('#')[0]);
+$('wa').href='https://wa.me/?text='+encodeURIComponent('Run with Ruby! 🐶 Waggleton Town. Watch the world and play the prototype: '+location.href.split('#')[0]);
 $('again').onclick=()=>scrollTo({top:0,behavior:reduce?'auto':'smooth'});
 
 /* ---- load the film fully first (progress bar), so scrubbing never stalls ---- */

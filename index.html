@@ -8,8 +8,8 @@
 <style>
 /*
 VOICE: playful kids' arcade, warm and cheeky
-IDEA: the Higgsfield gameplay concept brought to life: behind-Mochi chase down an autumn Waggleton high street
-PICTURE: the painted street fills the screen, Mochi runs at its centre
+IDEA: the Higgsfield gameplay concept brought to life: behind-Ruby chase down an autumn Waggleton high street
+PICTURE: the painted street fills the screen, Ruby runs at its centre
 COLOUR and TYPE: golden-hour amber, brownstone brown, taxi yellow, olive; Fredoka
 LAYOUT: full-bleed canvas, HUD in the corners like the concept, overlays centred
 */
@@ -135,7 +135,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:#1d140c;font-family:Fr
 </style>
 </head>
 <body>
-<canvas id="game" aria-label="Mochi running down Waggleton High Street"></canvas>
+<canvas id="game" aria-label="Ruby running down Waggleton High Street"></canvas>
 
 <div class="hud" id="treats"><img src="a/treat.webp" alt=""><span>× <span id="treatN">0</span></span></div>
 <div class="hud" id="alert"><div class="box"><b>🚨 CATCHER ALERT</b><div class="bar"><div id="alertFill"></div></div></div><img src="a/ic_catcher.webp" alt=""></div>
@@ -185,7 +185,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:#1d140c;font-family:Fr
   <button class="tile locked" disabled>Saltwhistle Bay <em>🔒 Coming soon</em></button>
   <button class="tile locked" disabled>Cogsbury Locks <em>🔒 Coming soon</em></button>
 </div><button class="btn ghost" data-close>Back</button></div></div>
-<div class="overlay" id="posterOv" hidden><div class="card"><img src="a/poster.jpg" alt="Mochi and her crew"><p>Mochi, Rook, Bandit, Duchess, Nuts, Tank and Pip. Rook joins you on Waggleton High Street; the rest of the crew unlock in later levels.</p><button class="btn ghost" data-close>Back</button></div></div>
+<div class="overlay" id="posterOv" hidden><div class="card"><img src="a/poster.jpg" alt="Ruby and her crew"><p>Ruby, Rook, Bandit, Duchess, Nuts, Tank and Pip. Rook joins you on Waggleton High Street; the rest of the crew unlock in later levels.</p><button class="btn ghost" data-close>Back</button></div></div>
 <div class="overlay" id="setOv" hidden><div class="card"><h1>Settings</h1><div class="tiles">
   <button class="tile" id="sndBtn">Sound <em id="sndLbl">On</em></button>
   <button class="tile" id="rstBtn">Reset best score <em id="rstLbl"></em></button>
@@ -195,7 +195,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:#1d140c;font-family:Fr
     <h1>Waggleton<br>Town</h1>
     <h2>Level 1 · Waggleton High Street</h2>
     
-    <p>Officer Grubb is on Mochi's tail! Reach Muddlecombe before he nets you.</p>
+    <p>Officer Grubb is on Ruby's tail! Reach Muddlecombe before he nets you.</p>
     <ul>
       <li><b>Swipe left / right</b> to switch lanes</li>
       <li><b>Swipe up</b> to jump crates and roadworks</li>
@@ -229,7 +229,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:#1d140c;font-family:Fr
 </div></div>
 <div id="raceBoard" hidden></div>
 <div class="overlay" id="pauseOv" hidden>
-  <div class="card"><h1>Paused</h1><p>Mochi is catching her breath.</p><button class="btn" id="resumeBtn">Keep running</button><br><button class="btn ghost" id="quitBtn">Restart level</button> <button class="btn ghost" id="pauseMenu">Main menu</button></div>
+  <div class="card"><h1>Paused</h1><p>Ruby is catching her breath.</p><button class="btn" id="resumeBtn">Keep running</button><br><button class="btn ghost" id="quitBtn">Restart level</button> <button class="btn ghost" id="pauseMenu">Main menu</button></div>
 </div>
 
 <script>
@@ -285,7 +285,7 @@ function resize(){
   portrait=H>W;C=portrait?SCN.P:SCN.L;({BW,BH,MX,GY,VPX,VPY,LANEBG,FS,FPZ,FTH,WALLS}=C);
   S0=portrait?Math.max(H/BH,W/BW)*1.0:Math.max(W/BW,H/BH)*1.04;
   GSY=H-(BH-GY)*S0;LS=LANEBG*S0;
-  PANF=portrait?.72:0;           // portrait: camera follows Mochi so side lanes stay on screen; landscape: steady camera
+  PANF=portrait?.72:0;           // portrait: camera follows Ruby so side lanes stay on screen; landscape: steady camera
 }
 const pan=()=>S.cam*LS*PANF*C.LX;
 const B2S=(bx,by)=>({x:(bx-MX)*S0+W/2-pan(),y:(by-GY)*S0+GSY});
@@ -547,7 +547,7 @@ function drawObj(o){
     const im=IMG[oimg],h=w*im.naturalHeight/im.naturalWidth;cx.drawImage(im,-w/2,-h,w,h);cx.restore();return}
   drawSprite(IMG[oimg],p.x,p.y,w,true,fade*(o.z<1?.5:1));
 }
-function drawMochi(){
+function drawRuby(){
   const ca=carryAmt(),air=S.y>0.001||ca>.05;const fr=air?4:Math.floor(S.phase)%FN;
   const k=C.mochiH/FVIS*S0*(S.pw>0&&S.pwk==='pip'?.6:1),f=footPos(),lift=S.y*C.mochiH*S0*.55+ca*C.mochiH*S0*.62;
   let sx=1,sy=1;if(S.land>0){const q=S.land/.18;sx=1+.07*q;sy=1-.09*q}else if(air){sx=.97;sy=1.04}
@@ -593,7 +593,7 @@ function draw(){
   drawGroundLeaves();
   const L=[];for(const o of S.objs)L.push({z:o.k==='pad'?o.z+(C.PADL||0)+5:o.z,f:()=>drawObj(o)});for(const o of S.sc)L.push({z:o.z,f:()=>drawScenery(o)});
   for(const g of ghosts()){const z=1+(g.d-S.dist);if(z>.62&&z<16)L.push({z:z+.001,f:()=>drawGhost(g,z)})}
-  L.push({z:1,f:drawMochi});L.sort((a,b)=>b.z-a.z).forEach(o=>o.f());
+  L.push({z:1,f:drawRuby});L.sort((a,b)=>b.z-a.z).forEach(o=>o.f());
   for(const p of S.parts){cx.globalAlpha=Math.max(0,Math.min(1,p.life*2));cx.fillStyle=p.c;cx.beginPath();cx.arc(p.x,p.y,p.r*(p.dust?(1.6-p.life):1),0,7);cx.fill()}cx.globalAlpha=1;
   for(const l of S.leaves){cx.save();cx.translate(l.x,l.y);cx.rotate(l.r);cx.fillStyle=l.c;cx.beginPath();cx.moveTo(0,-l.s);cx.quadraticCurveTo(l.s*.7,0,0,l.s);cx.quadraticCurveTo(-l.s*.7,0,0,-l.s);cx.fill();cx.restore()}
   if(S.boost>0||S.dash>0){const v=B2S(VPX,VPY),k=Math.min(1,(S.boost||S.dash)/.4);cx.strokeStyle='rgba(255,246,220,.55)';cx.lineCap='round';
@@ -622,8 +622,8 @@ function end(won){
     $('endTitle').textContent=won?'Made it to the park!':'Netted!';
     const stars=won?(S.treats>=70?3:S.treats>=40?2:1):0;
     $('endStars').innerHTML=[0,1,2].map(i=>`<span class="${i<stars?'':'off'}">★</span>`).join('');
-    $('endText').innerHTML=won?`Mochi grabbed <b>${S.treats}</b> treats and bumped into ${S.hits} thing${S.hits===1?'':'s'}.${S.treats>best&&best?' New best!':best?` Best: ${best}.`:''}<br>Next up: Muddlecombe — coming soon!`
-      :`Officer Grubb caught Mochi ${Math.round(S.dist/GOAL*100)}% of the way to Muddlecombe. Tip: dodge the taxis, save Explorer Shield for a tight spot, and use Courier Dash to shake him off.`;
+    $('endText').innerHTML=won?`Ruby grabbed <b>${S.treats}</b> treats and bumped into ${S.hits} thing${S.hits===1?'':'s'}.${S.treats>best&&best?' New best!':best?` Best: ${best}.`:''}<br>Next up: Muddlecombe — coming soon!`
+      :`Officer Grubb caught Ruby ${Math.round(S.dist/GOAL*100)}% of the way to Muddlecombe. Tip: dodge the taxis, save Explorer Shield for a tight spot, and use Courier Dash to shake him off.`;
     if(RC.on){$('endText').textContent=won?`You reached Muddlecombe in ${RC.ft} seconds with ${S.treats} treats.`:`Officer Grubb netted you ${Math.round(S.dist/GOAL*100)}% of the way to Muddlecombe.`;$('againBtn').textContent='Back to race room'}else $('againBtn').textContent='Play again';
     $('endRace').hidden=!RC.on;raceEndList();
     $('endUnlock').hidden=!newly.length;$('endUnlock').textContent=newly.length?'🎉 New crew unlocked: '+newly.map(c=>c.name).join(' & ')+'! Visit My Crew to meet them.':'';
@@ -741,13 +741,13 @@ tap('rBack',()=>{$('raceOv').hidden=true;$('menuScr').hidden=false});
 $('rCode').addEventListener('keydown',e=>{if(e.key==='Enter')joinRace()});
 // ---------- the crew: bios, powers and unlock challenges ----------
 const CREW=[
- {id:'mochi',name:'Mochi',kind:'Shih Tzu · The hero',power:'Explorer Shield',pdesc:'Her explorer backpack pops up a bubble shield that blocks one bump.',bio:'A brave little Shih Tzu who slipped her lead on Waggleton High Street and decided the open road to London was far too exciting to leave. She never goes anywhere without her explorer backpack.',slot:'Always on the team (green button).'},
- {id:'rook',name:'Rook',kind:'Pigeon · Courier',power:'Courier Dash',pdesc:'Rook grabs Mochi and rockets her forward: faster, untouchable, and Officer Grubb falls way behind.',bio:'The fastest wings in Waggleton. Rook knows every rooftop shortcut, lost an eye in a hot dog stand argument, and has never once lost a delivery.',slot:'Joins on Waggleton High Street (blue button).'},
- {id:'bandit',name:'Bandit',kind:'Raccoon · Bin raider',power:'Lid Bash',pdesc:'For 5 seconds Mochi smashes straight through crates, bins and barriers without getting bumped.',bio:'King of the alleys, with a dented bin lid for a shield. Talks big, eats bigger, and is secretly the most loyal friend you will ever have.',ch:{st:'total',goal:150,text:'Collect 150 bones in total'}},
- {id:'nuts',name:'Nuts',kind:'Squirrel · Park scout',power:'Nut Magnet',pdesc:'Every bone in every lane flies straight to Mochi for 6 seconds.',bio:'A hyperactive park scout in flying goggles who has mapped every tree in the city. Speaks very fast and always knows a shortcut.',ch:{st:'best',goal:60,text:'Grab 60 bones in a single run'}},
+ {id:'mochi',name:'Ruby',kind:'Shih Tzu · The hero',power:'Explorer Shield',pdesc:'Her explorer backpack pops up a bubble shield that blocks one bump.',bio:'A brave little Shih Tzu who slipped her lead on Waggleton High Street and decided the open road to London was far too exciting to leave. She never goes anywhere without her explorer backpack.',slot:'Always on the team (green button).'},
+ {id:'rook',name:'Rook',kind:'Pigeon · Courier',power:'Courier Dash',pdesc:'Rook grabs Ruby and rockets her forward: faster, untouchable, and Officer Grubb falls way behind.',bio:'The fastest wings in Waggleton. Rook knows every rooftop shortcut, lost an eye in a hot dog stand argument, and has never once lost a delivery.',slot:'Joins on Waggleton High Street (blue button).'},
+ {id:'bandit',name:'Bandit',kind:'Raccoon · Bin raider',power:'Lid Bash',pdesc:'For 5 seconds Ruby smashes straight through crates, bins and barriers without getting bumped.',bio:'King of the alleys, with a dented bin lid for a shield. Talks big, eats bigger, and is secretly the most loyal friend you will ever have.',ch:{st:'total',goal:150,text:'Collect 150 bones in total'}},
+ {id:'nuts',name:'Nuts',kind:'Squirrel · Park scout',power:'Nut Magnet',pdesc:'Every bone in every lane flies straight to Ruby for 6 seconds.',bio:'A hyperactive park scout in flying goggles who has mapped every tree in the city. Speaks very fast and always knows a shortcut.',ch:{st:'best',goal:60,text:'Grab 60 bones in a single run'}},
  {id:'duchess',name:'Duchess',kind:'Persian cat · Charmer',power:'Charm',pdesc:'Duchess bats her eyes at Officer Grubb. Catcher Alert drops to zero and stays calm for 5 seconds.',bio:'A penthouse cat who wears real pearls. She pretends she is far too posh to help a street dog, then saves the day anyway.',ch:{st:'clean',goal:1,text:'Reach Muddlecombe without bumping into anything'}},
  {id:'tank',name:'Tank',kind:'Newfoundland · Big muscle',power:'Bulldoze',pdesc:'Tank charges ahead and clears the way: faster for 4 seconds, and nothing can stop you.',bio:'A gentle giant and retired harbour rescue dog. Swims like a fish, hugs like a bear, and is scared of exactly one thing: the vacuum cleaner.',ch:{st:'wins',goal:3,text:'Reach Muddlecombe 3 times'}},
- {id:'pip',name:'Pip',kind:'Hamster · Speed demon',power:'Tiny Turbo',pdesc:'Mochi shrinks to hamster size for 5 seconds and zips harmlessly past every obstacle.',bio:'Escaped from a pet shop in a toy car and never looked back. Tiny, loud, and totally convinced he is the best driver in Waggleton.',ch:{st:'ramps',goal:3,text:'Launch off 3 speed ramps in one run'}}];
+ {id:'pip',name:'Pip',kind:'Hamster · Speed demon',power:'Tiny Turbo',pdesc:'Ruby shrinks to hamster size for 5 seconds and zips harmlessly past every obstacle.',bio:'Escaped from a pet shop in a toy car and never looked back. Tiny, loud, and totally convinced he is the best driver in Waggleton.',ch:{st:'ramps',goal:3,text:'Launch off 3 speed ramps in one run'}}];
 function stats(){try{return Object.assign({total:0,best:0,clean:0,wins:0,ramps:0},JSON.parse(localStorage.getItem('mochiStats')||'{}'))}catch(e){return{total:0,best:0,clean:0,wins:0,ramps:0}}}
 const isOpen=(c,st=stats())=>!c.ch||st[c.ch.st]>=c.ch.goal;
 function sideCrew(){let id='';try{id=localStorage.getItem('mochiSide')||''}catch(e){}const c=CREW.find(x=>x.id===id&&x.ch);return c&&isOpen(c)?c:null}
