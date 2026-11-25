@@ -3,399 +3,254 @@
 <head>
 <meta charset="utf-8">
 <link rel="icon" href="data:,">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Mochi: Big City Dash</title>
-<meta name="description" content="Outrun the catcher. Rally the crew. An immersive 3D journey down Brownstone Street with Mochi the Shih Tzu.">
+<meta name="description" content="Outrun the catcher. Rally the crew. Scroll through the world of Mochi the Shih Tzu.">
+<meta name="theme-color" content="#2a1206">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
-/* VOICE: a game turned into a website — cinematic, playful, autumn-gold, very little chrome.
-   IDEA: scrolling IS running: the camera chases Mochi down a real-time 3D Brownstone Street, up over the rooftops and into the sky.
-   PICTURE: one full-screen WebGL world with the game's painted street and real 3D models of Mochi, Grubb, Rook, the crew, taxis and hot dog carts.
-   COLOUR and TYPE: dusk amber haze, brownstone, cream type; Lilita One display, Nunito small text.
-   LAYOUT: fixed 3D canvas, thin corner UI, chapter text that fades in over the world. */
-:root{--gold:#f6b93b;--cream:#fff3dc;--ink:#fff7ea;--deep:#1b0d06;--leaf:#e8611a}
+/* VOICE: the game's own world, played like the opening of an animated film. Warm, cheeky, golden.
+   IDEA: your scroll is the film's playhead. One continuous shot: Mochi bolts, Grubb gives chase, the crew joins, Rook flies her over the rooftops.
+   PICTURE: full-screen cinematic footage rendered in the game's exact style, with the game's chunky gold type and UI on top.
+   COLOUR and TYPE: autumn gold, brick red, cream; Lilita One with gold gradient and dark-brown outline like the game logo; Nunito for small text.
+   LAYOUT: fixed film behind, chapter titles fade in over it, then a crew carousel, levels and a big Play button over the sunset. */
+:root{--gold:#ffcf4a;--gold2:#f39c1e;--brown:#4a1d08;--cream:#fff4dd;--red:#d8342a;--green:#5d6b2a}
 *{box-sizing:border-box;min-width:0}
-html,body{margin:0;background:var(--deep);color:var(--ink);font:600 16px/1.5 Nunito,system-ui,sans-serif}
+html,body{margin:0;background:#2a1206;color:var(--cream);font:700 16px/1.5 Nunito,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
 body{overflow-x:clip}
-#gl{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0;touch-action:pan-y}
-#track{height:1100vh;position:relative;z-index:1;pointer-events:none}
+#film{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;background:#2a1206;transform-origin:50% 60%}
+#still{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:1;transition:opacity .6s}
+#leaves{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
+.vig{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 45%,transparent 55%,#1b0800aa 100%),linear-gradient(transparent 60%,#1b080088)}
+#track{position:relative;z-index:2;height:900vh}
+/* game-style type */
+.gt{font-family:"Lilita One",Nunito,sans-serif;font-weight:400;line-height:.95;letter-spacing:.01em;color:var(--gold);
+  background:linear-gradient(#fff3a6 0%,#ffd24d 45%,#f39c1e 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  -webkit-text-stroke:0;filter:drop-shadow(0 3px 0 #4a1d08) drop-shadow(0 -2px 0 #4a1d08) drop-shadow(2px 0 0 #4a1d08) drop-shadow(-2px 0 0 #4a1d08) drop-shadow(0 8px 14px #0009);margin:0;text-wrap:balance}
+.tag{display:inline-block;font:900 13px Nunito;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--red);border:2px solid #fff3;border-radius:999px;padding:5px 14px;box-shadow:0 3px 0 #7a1410;margin-bottom:12px}
+.ch{position:fixed;z-index:3;left:50%;width:min(92vw,760px);text-align:center;opacity:0;visibility:hidden;pointer-events:none;
+  transform:translate(-50%,24px) scale(.96);transition:opacity .5s,transform .6s cubic-bezier(.2,.8,.2,1),visibility .5s}
+.ch.on{opacity:1;visibility:visible;transform:translate(-50%,0) scale(1)}
+.ch.top{top:max(84px,11vh)}.ch.bot{bottom:max(28px,7vh)}
+.ch h2{font-size:clamp(46px,9vw,104px)}
+.ch p{margin:12px auto 0;max-width:34ch;font-size:clamp(16px,2.1vw,21px);font-weight:800;text-shadow:0 2px 10px #000,0 0 2px #000}
+#c0 img{width:min(560px,84vw);filter:drop-shadow(0 10px 30px #000a)}
+#c0 p{font-size:clamp(18px,2.4vw,24px)}
 /* corner UI */
-.ui{position:fixed;z-index:5;pointer-events:auto}
-#logo{left:max(18px,2vw);top:max(14px,2vh);width:clamp(110px,14vw,170px);filter:drop-shadow(0 4px 10px #0008)}
-#sound{right:max(18px,2vw);top:max(16px,2vh);background:none;border:2px solid #fff6;color:var(--cream);border-radius:999px;padding:8px 14px;font:800 13px Nunito;cursor:pointer;min-height:40px;display:flex;align-items:center;gap:8px;backdrop-filter:blur(6px)}
-#sound i{display:flex;gap:2px;align-items:flex-end;height:14px}#sound i b{width:3px;background:var(--gold);height:4px;border-radius:2px}
-#sound.on i b{animation:eq .9s ease-in-out infinite}#sound.on i b:nth-child(2){animation-delay:.2s}#sound.on i b:nth-child(3){animation-delay:.45s}
+.ui{position:fixed;z-index:6}
+#logo{left:max(14px,2vw);top:max(10px,1.6vh);width:clamp(96px,11vw,150px);filter:drop-shadow(0 4px 10px #0009);opacity:0;transition:opacity .4s}
+#logo.on{opacity:1}
+#sound{right:max(14px,2vw);top:max(12px,1.8vh);display:flex;align-items:center;gap:8px;min-height:44px;padding:8px 14px;border-radius:999px;border:2px solid #fff6;background:#2a120699;color:var(--cream);font:900 13px Nunito;cursor:pointer;backdrop-filter:blur(8px)}
+#sound i{display:flex;gap:2px;align-items:flex-end;height:14px}#sound i b{width:3px;height:4px;background:var(--gold);border-radius:2px}
+#sound.on i b{animation:eq .8s ease-in-out infinite}#sound.on i b:nth-child(2){animation-delay:.2s}#sound.on i b:nth-child(3){animation-delay:.4s}
 @keyframes eq{50%{height:14px}}
-#prog{left:max(18px,2vw);bottom:max(18px,2.4vh);display:flex;flex-direction:column;gap:6px}
-#prog button{all:unset;cursor:pointer;display:flex;align-items:center;gap:10px;font:800 12px Nunito;color:#fff9;letter-spacing:.02em;min-height:24px}
-#prog button i{width:18px;height:2px;background:#fff6;transition:width .3s,background .3s}
-#prog button.on{color:var(--cream)}#prog button.on i{width:40px;background:var(--gold)}
-@media(max-width:700px),(max-height:860px){#prog{display:none}}
-#hint{left:50%;bottom:max(20px,3vh);transform:translateX(-50%);text-align:center;font:800 13px Nunito;color:var(--cream);opacity:.85;transition:opacity .5s;pointer-events:none}
-#hint span{display:block;width:2px;height:34px;margin:8px auto 0;background:linear-gradient(var(--gold),transparent);animation:drip 1.6s ease-in-out infinite}
-@keyframes drip{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
-#play{right:max(18px,2vw);bottom:max(18px,2.4vh)}
-/* chapters */
-.ch{position:fixed;z-index:4;left:max(22px,6vw);right:max(22px,6vw);top:50%;transform:translateY(calc(-50% + 30px));max-width:560px;opacity:0;visibility:hidden;transition:opacity .6s,transform .6s,visibility .6s;pointer-events:none}
-.ch.on{opacity:1;visibility:visible;transform:translateY(-50%)}
-.ch.r{left:auto}
-.ch.c{left:50%;right:auto;transform:translate(-50%,calc(-50% + 30px));text-align:center;width:min(92vw,720px);max-width:none}
-.ch.c.on{transform:translate(-50%,-50%)}
-.ch.top{top:16vh;transform:translateY(30px)}.ch.top.on{transform:none}
-.ch.c.top{transform:translate(-50%,30px)}.ch.c.top.on{transform:translate(-50%,0)}
-.n{font:900 13px Nunito;color:var(--gold);display:block;margin-bottom:6px}
-.ch h1,.ch h2{font-family:"Lilita One",Nunito,sans-serif;font-weight:400;line-height:1;margin:0 0 14px;text-wrap:balance;text-shadow:0 4px 24px #000c,0 2px 0 #6b2c0d}
-.ch h1{font-size:clamp(44px,8.5vw,104px)}
-.ch h2{font-size:clamp(36px,6vw,72px)}
-.ch p{font-size:clamp(16px,1.6vw,19px);margin:0 0 14px;text-shadow:0 2px 14px #000;max-width:46ch}
-.ch.c p{margin-inline:auto}
-.btn{pointer-events:auto;display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:12px 22px;border-radius:999px;border:0;font:900 16px Nunito;text-decoration:none;cursor:pointer;color:#3b1d0b;background:linear-gradient(#ffd36b,#f39c1e);box-shadow:0 5px 0 #a9500e,0 12px 30px #0008;transition:transform .15s}
-.btn:hover{transform:translateY(-2px)}.btn:active{transform:translateY(2px)}
-.btn.ghost{background:#ffffff14;color:var(--cream);box-shadow:inset 0 0 0 2px #fff8;backdrop-filter:blur(6px)}
-.btn.wa{background:linear-gradient(#5fd673,#25a244);color:#fff;box-shadow:0 5px 0 #17702d}
-.row{display:flex;flex-wrap:wrap;gap:12px}.ch.c .row{justify-content:center}
-.meter{width:min(320px,80vw);margin:6px 0 16px}
-.meter .l{display:flex;justify-content:space-between;font:900 13px Nunito;color:#ff7b66;margin-bottom:6px}
-.meter .b{height:12px;border-radius:99px;background:#0007;border:2px solid var(--gold);overflow:hidden}
-.meter .b i{display:block;height:100%;width:0;background:linear-gradient(90deg,#3fa34d,#f6b93b 55%,#e2402c)}
-/* crew panel */
-#crewCard{position:fixed;z-index:6;right:max(18px,4vw);bottom:max(16px,3vh);transform:translateY(30px);width:min(360px,88vw);background:#1b0d06e6;border:2px solid var(--gold);border-radius:24px;padding:18px 20px;opacity:0;visibility:hidden;transition:.4s;backdrop-filter:blur(10px);box-shadow:0 20px 50px #000b;pointer-events:auto}
-#crewCard.on{opacity:1;visibility:visible;transform:none}
-#crewCard .top{display:flex;gap:14px;align-items:center;margin-bottom:10px}
-#crewCard img{width:74px;height:74px;border-radius:50%;object-fit:cover;border:3px solid var(--gold)}
-#crewCard h3{font:400 30px "Lilita One";margin:0;color:var(--gold)}
-#crewCard .k{font-size:14px;color:#f3d9b6}
-#crewCard .pw{background:#fff1;border-radius:14px;padding:10px 12px;margin:8px 0;font-size:15px}
-#crewCard .pw b{color:var(--gold)}
-#crewCard p{font-size:15px;margin:0 0 8px}
-#crewCard .ul{font:900 13px Nunito;color:#9fe3a8}
-#crewCard .x{position:absolute;top:10px;right:12px;background:none;border:0;color:#fff;font-size:22px;cursor:pointer;width:40px;height:40px}
-@media(max-width:700px){#crewCard{top:auto;bottom:14px;right:50%;transform:translate(50%,30px)}#crewCard.on{transform:translate(50%,0)}.ch.r{left:max(22px,6vw)}}
-@media(max-width:700px),(orientation:portrait){.crewch{top:16vh;transform:translateY(30px);text-align:center}.crewch.on{transform:none}.crewch .chips{justify-content:center}.crewch p{margin-inline:auto}}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 14px}
-.chips button{pointer-events:auto;all:unset;cursor:pointer;font:900 13px Nunito;padding:8px 12px;border-radius:999px;background:#0006;border:2px solid #f6b93b88;color:var(--cream)}
-.chips button:hover,.chips button.on{background:var(--gold);color:#3b1d0b}
-.chips button:focus-visible{outline:3px solid #8fd0ff}
+#bar{left:0;right:0;bottom:0;height:5px;background:#0005}
+#bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffe17a,#f39c1e)}
+#bone{position:fixed;z-index:6;bottom:9px;left:0;width:30px;height:18px;margin-left:-15px;pointer-events:none}
+#hint{left:50%;bottom:max(30px,5vh);transform:translateX(-50%);text-align:center;font:900 13px Nunito;letter-spacing:.06em;text-transform:uppercase;color:#fff;text-shadow:0 2px 8px #000;transition:opacity .4s;pointer-events:none}
+#hint span{display:block;margin:8px auto 0;width:26px;height:40px;border:3px solid #fff;border-radius:14px;position:relative}
+#hint span:after{content:"";position:absolute;left:50%;top:7px;width:4px;height:8px;margin-left:-2px;background:var(--gold);border-radius:2px;animation:wheel 1.4s infinite}
+@keyframes wheel{to{transform:translateY(12px);opacity:0}}
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:12px 26px;border-radius:18px;border:3px solid #7a3a08;font:400 22px "Lilita One";letter-spacing:.02em;color:#fff;text-decoration:none;cursor:pointer;
+  background:linear-gradient(#ffd85c,#f7a21f 60%,#e98410);text-shadow:0 2px 0 #9a4a06;box-shadow:inset 0 3px 0 #fff6,0 5px 0 #7a3a08,0 12px 26px #0008;transition:transform .12s}
+.btn:hover{transform:translateY(-2px)}.btn:active{transform:translateY(3px);box-shadow:inset 0 3px 0 #fff6,0 2px 0 #7a3a08}
+.btn.g{background:linear-gradient(#8ee06a,#4caa35 60%,#2f8a25);border-color:#1c5a14;text-shadow:0 2px 0 #1c5a14;box-shadow:inset 0 3px 0 #fff6,0 5px 0 #1c5a14,0 12px 26px #0008}
+.btn.w{background:linear-gradient(#fff9ec,#f3dfb8);color:#5a2a0a;text-shadow:none;border-color:#9a6a2a;box-shadow:inset 0 3px 0 #fff,0 5px 0 #9a6a2a,0 12px 26px #0008}
+.btn:focus-visible,.crew button:focus-visible{outline:4px solid #8fd0ff;outline-offset:3px}
+/* after-film sections */
+#after{position:relative;z-index:4}
+.sec{min-height:100vh;display:grid;align-content:center;justify-items:center;padding:12vh 0 10vh;text-align:center}
+.sec h2{font-size:clamp(44px,8vw,92px)}
+.sec .lead{max-width:36ch;margin:14px auto 26px;font-size:clamp(16px,2vw,20px);font-weight:800;text-shadow:0 2px 10px #000}
+.shade{position:fixed;inset:0;z-index:3;pointer-events:none;background:#24100566;backdrop-filter:blur(0);opacity:0;transition:opacity .3s}
+/* crew carousel */
+.crew{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;width:100%;padding:14px max(6vw,calc(50vw - 150px)) 30px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.crew::-webkit-scrollbar{display:none}
+.card{flex:0 0 min(300px,78vw);scroll-snap-align:center;border-radius:28px;padding:0 0 18px;position:relative;text-align:left;color:#4a1d08;
+  background:linear-gradient(#fff8e6,#f6e0b4);border:4px solid #f0b43a;box-shadow:0 7px 0 #a8620f,0 24px 40px #000a;overflow:hidden;transition:transform .3s}
+.card .art{height:250px;background:radial-gradient(circle at 50% 70%,#ffe9a8,#f6d48a 60%,#eab866);display:grid;place-items:end center;overflow:hidden;border-bottom:4px solid #f0b43a}
+.card .art img{width:100%;height:100%;object-fit:cover;object-position:50% 40%;mix-blend-mode:multiply;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.card:hover .art img{transform:scale(1.06) translateY(-4px)}
+.card h3{font:400 34px "Lilita One";margin:12px 18px 0;color:#c4420e;line-height:1}
+.card .k{margin:2px 18px 10px;font:900 13px Nunito;letter-spacing:.05em;text-transform:uppercase;color:#8a5a2a}
+.card .pw{margin:0 14px;padding:10px 12px;border-radius:16px;background:#4a1d08;color:#fff4dd;font-size:14px;line-height:1.35}
+.card .pw b{display:block;font:400 19px "Lilita One";color:var(--gold);letter-spacing:.02em}
+.card p{margin:10px 18px 0;font-size:14.5px;line-height:1.45;font-weight:700}
+.card .ul{margin:10px 18px 0;display:inline-flex;gap:6px;align-items:center;font:900 12.5px Nunito;color:#2f7a22;background:#dff2c9;border-radius:999px;padding:5px 10px}
+.card.villain{background:linear-gradient(#fbe9de,#efc6ad);border-color:#d8342a;box-shadow:0 7px 0 #7a1410,0 24px 40px #000a}
+.card.villain .art{background:radial-gradient(circle at 50% 70%,#ffd0b8,#f0a988 60%,#d9785a);border-color:#d8342a}
+.card.villain h3{color:#a3170f}
+.card.villain .ul{background:#ffd6cf;color:#a3170f}
+.arrows{display:flex;gap:12px;justify-content:center}
+.arrows button{width:52px;height:52px;border-radius:50%;border:3px solid #7a3a08;background:linear-gradient(#ffd85c,#f39c1e);color:#5a2a0a;font:400 24px "Lilita One";cursor:pointer;box-shadow:0 4px 0 #7a3a08}
+/* levels */
+.levels{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;padding:0 5vw;max-width:1100px}
+.lv{width:min(200px,42vw);border-radius:20px;overflow:hidden;background:#fff4dd;border:4px solid #f0b43a;box-shadow:0 6px 0 #a8620f,0 18px 30px #0009;color:#4a1d08;position:relative}
+.lv img{display:block;width:100%;aspect-ratio:1.26;object-fit:cover}
+.lv .lt{padding:8px 10px 10px;font:400 19px "Lilita One";line-height:1.05}
+.lv .ls{display:block;font:900 12px Nunito;color:#2f7a22;margin-top:3px}
+.lv.lock img{filter:grayscale(.65) brightness(.75)}
+.lv.lock .ls{color:#a35a10}
+.lv.lock:after{content:"🔒";position:absolute;top:10px;right:10px;font-size:22px;filter:drop-shadow(0 2px 2px #0008)}
+.lv.mys img{filter:blur(6px) brightness(.6)}
+.row{display:flex;flex-wrap:wrap;gap:14px;justify-content:center}
+.small{margin-top:26px;font-size:13px;color:#f3d9b6;text-shadow:0 1px 6px #000}
 /* loader */
-#loader{position:fixed;inset:0;z-index:20;background:radial-gradient(ellipse at 50% 60%,#4a230f,#1b0d06 70%);display:grid;place-items:center;transition:opacity .9s,visibility .9s}
+#loader{position:fixed;inset:0;z-index:20;display:grid;place-items:center;background:#2a1206 center/cover;transition:opacity .8s,visibility .8s}
+#loader:before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 55%,#2a120655,#1b0800ee 80%)}
 #loader.done{opacity:0;visibility:hidden}
-#loader .in{text-align:center;display:grid;justify-items:center;gap:16px;padding:20px}
-#loader img{width:min(380px,76vw);filter:drop-shadow(0 10px 30px #000a)}
-#pct{font:400 clamp(56px,11vw,120px)/1 "Lilita One";color:var(--gold);text-shadow:0 4px 0 #6b2c0d;font-variant-numeric:tabular-nums}
-.bone{width:min(320px,70vw);height:10px;border-radius:99px;background:#0006;overflow:hidden}.bone i{display:block;height:100%;width:0;background:var(--gold);transition:width .2s}
-#enter{display:none;gap:12px;flex-wrap:wrap;justify-content:center}
-#loader p{margin:0;color:#f3d9b6;font-size:15px}
-#cursor{position:fixed;z-index:30;left:0;top:0;width:34px;height:34px;margin:-17px 0 0 -17px;border:2px solid var(--cream);border-radius:50%;pointer-events:none;mix-blend-mode:difference;transition:width .2s,height .2s,margin .2s,background .2s;display:none}
-#cursor.big{width:64px;height:64px;margin:-32px 0 0 -32px;background:#fff3}
-@media(hover:hover) and (pointer:fine){#cursor{display:block}}
-#nogl{display:none;position:fixed;inset:0;z-index:40;background:var(--deep);place-items:center;text-align:center;padding:24px}
-@media(prefers-reduced-motion:reduce){.ch,#crewCard{transition:none}}
+#loader .in{position:relative;display:grid;justify-items:center;gap:18px;padding:24px;text-align:center}
+#loader img{width:min(440px,80vw);filter:drop-shadow(0 10px 30px #000b);animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-8px) rotate(-1deg)}}
+.lbar{width:min(340px,74vw);height:30px;border-radius:999px;background:#4a1d08;border:3px solid #7a3a08;padding:4px;box-shadow:0 4px 0 #2a0e02}
+.lbar i{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(#ffe17a,#f39c1e);box-shadow:inset 0 2px 0 #fff8;transition:width .2s}
+#pct{font:400 22px "Lilita One";color:var(--gold);text-shadow:0 2px 0 #4a1d08}
+#go{display:none;gap:12px;flex-wrap:wrap;justify-content:center}
+#ltip{margin:0;font:800 14px Nunito;color:#f3d9b6;max-width:32ch}
+#nojs{display:none}
+@media(prefers-reduced-motion:reduce){.ch{transition:none}#loader img{animation:none}}
 </style>
-<script type="importmap">{"imports":{"three":"./lib/three.module.js","three/addons/":"./lib/addons/"}}</script>
 </head>
 <body>
-<canvas id="gl" aria-label="A 3D journey down Brownstone Street with Mochi"></canvas>
-<div id="track"></div>
+<img id="still" alt="" src="">
+<video id="film" muted playsinline preload="auto" aria-label="Mochi runs through New York with her crew"></video>
+<canvas id="leaves"></canvas>
+<div class="vig"></div>
+<div class="shade" id="shade"></div>
 
 <img id="logo" class="ui" src="t/p_logo.webp" alt="Mochi: Big City Dash">
 <button id="sound" class="ui" aria-pressed="false"><i><b></b><b></b><b></b></i><span>Sound off</span></button>
-<nav id="prog" class="ui" aria-label="Chapters"></nav>
 <div id="hint" class="ui">Scroll to run<span></span></div>
-<a id="play" class="ui btn" href="https://scrien01.github.io/mochi-dash./" target="_blank" rel="noopener">▶ Play</a>
+<div id="bar" class="ui"><i></i></div>
 
-<section class="ch c" data-a="0" data-b=".08" id="c0"><span class="n">A Microdrama UK game · in development</span><h1>Mochi: Big City Dash</h1><p>Outrun the catcher. Rally the crew. Scroll down and run with her.</p></section>
-<section class="ch" data-a=".1" data-b=".22"><span class="n">01 · The runaway</span><h2>Meet Mochi</h2><p>A little Shih Tzu with a big red topknot, an explorer backpack and one wild plan: see all of New York in a single autumn afternoon.</p></section>
-<section class="ch r top" data-a=".24" data-b=".34"><span class="n">02 · The city</span><h2>Brownstone Street</h2><p>Stoops, iron railings and golden trees, with the Empire State Building at the end of every road. Every neighbourhood is a level.</p></section>
-<section class="ch" data-a=".36" data-b=".46"><span class="n">03 · The catcher</span><h2>Officer Grubb</h2><p>A net, a whistle and a moustache like a broom. Every bump brings him closer.</p><div class="meter"><div class="l"><span>🚨 Catcher Alert</span><span id="mPct">0%</span></div><div class="b"><i id="mFill"></i></div></div></section>
-<section class="ch crewch" data-a=".5" data-b=".69" id="crewCh"><span class="n">04 · The crew</span><h2>Seven friends, seven powers</h2><p>Tap a friend, or pick a name.</p><div class="chips" id="chips"></div></section>
-<section class="ch r" data-a=".72" data-b=".82"><span class="n">05 · Courier Dash</span><h2>Hop on, kid!</h2><p>Rook the courier pigeon grabs Mochi by her backpack and flies her over the rooftops, leaving Officer Grubb far below.</p></section>
-<section class="ch c top" data-a=".84" data-b=".92"><span class="n">06 · The levels</span><h2>A whole city to escape</h2><p>Brownstone Street is playable now. City Park, the Waterfront, the Rooftops and the Subway are coming next.</p></section>
-<section class="ch c" data-a=".94" data-b="1.01" id="cEnd"><span class="n">07 · Your turn</span><h2>Run with Mochi</h2><p>Play the browser prototype, race your friends with a room code, and tell everyone it is coming to iPhone and Android.</p>
-  <div class="row"><a class="btn" href="https://scrien01.github.io/mochi-dash./" target="_blank" rel="noopener">▶ Play the prototype</a><a class="btn wa" id="wa" href="#" target="_blank" rel="noopener">Share on WhatsApp</a><button class="btn ghost" id="again">↺ Run it again</button></div></section>
+<section class="ch top" id="c0" data-a="-1" data-b=".07"><img src="t/p_logo.webp" alt="Mochi: Big City Dash"><p>Outrun the catcher. Rally the crew.</p></section>
+<section class="ch bot" data-a=".1" data-b=".24"><span class="tag">Meet Mochi</span><h2 class="gt">One small dog. One big city.</h2><p>A Shih Tzu with a red topknot, an explorer backpack and a plan to see all of New York before teatime.</p></section>
+<section class="ch top" data-a=".3" data-b=".44"><span class="tag">Uh-oh</span><h2 class="gt">Officer Grubb!</h2><p>A net, a whistle and a moustache like a broom. Every bump brings him closer.</p></section>
+<section class="ch bot" data-a=".52" data-b=".68"><span class="tag">Rally the crew</span><h2 class="gt">Nobody runs alone</h2><p>Seven street-smart friends, each with a power that turns the chase around.</p></section>
+<section class="ch top" data-a=".76" data-b=".94"><span class="tag">Courier Dash</span><h2 class="gt">Hop on, kid!</h2><p>Rook grabs Mochi by her backpack and flies her over the rooftops.</p></section>
 
-<aside id="crewCard" aria-live="polite"><button class="x" id="ccX" aria-label="Close">×</button><div class="top"><img id="ccImg" alt=""><div><h3 id="ccName"></h3><div class="k" id="ccKind"></div></div></div><div class="pw"><b id="ccPow"></b><br><span id="ccPd"></span></div><p id="ccBio"></p><div class="ul" id="ccUl"></div></aside>
+<div id="track"></div>
 
-<div id="loader"><div class="in"><img src="t/p_logo.webp" alt="Mochi: Big City Dash"><div id="pct">0</div><div class="bone"><i id="bar"></i></div>
-  <div id="enter" class="row"><button class="btn" id="enterS">Enter with sound</button><button class="btn ghost" id="enterQ">Enter quietly</button></div><p id="lmsg">Fetching the bones…</p></div></div>
-<div id="cursor"></div>
-<div id="nogl"><div><h2 style="font-family:'Lilita One'">Your browser can't show the 3D city</h2><p>You can still play the game.</p><a class="btn" href="https://scrien01.github.io/mochi-dash./">▶ Play the prototype</a></div></div>
+<div id="after">
+  <section class="sec" id="crewSec">
+    <span class="tag">The crew</span>
+    <h2 class="gt">Meet the gang</h2>
+    <p class="lead">Swipe through the crew. Finish challenges in the game to unlock each friend and their power.</p>
+    <div class="crew" id="crew" tabindex="0" aria-label="Crew cards, scroll sideways"></div>
+    <div class="arrows"><button id="prev" aria-label="Previous">‹</button><button id="next" aria-label="Next">›</button></div>
+  </section>
+  <section class="sec">
+    <span class="tag">The levels</span>
+    <h2 class="gt">A whole city to escape</h2>
+    <p class="lead">Brownstone Street is playable now. The rest of New York is coming.</p>
+    <div class="levels">
+      <div class="lv"><img src="t/lv_street.jpg" alt=""><div class="lt">Brownstone Street<span class="ls">▶ Playable now</span></div></div>
+      <div class="lv lock"><img src="t/lv_park.jpg" alt=""><div class="lt">City Park<span class="ls">Next up</span></div></div>
+      <div class="lv lock"><img src="t/lv_water.jpg" alt=""><div class="lt">Waterfront<span class="ls">Coming soon</span></div></div>
+      <div class="lv lock mys"><img src="t/lv_street.jpg" alt=""><div class="lt">Rooftops<span class="ls">Coming soon</span></div></div>
+      <div class="lv lock mys"><img src="t/lv_park.jpg" alt=""><div class="lt">The Subway<span class="ls">Coming soon</span></div></div>
+    </div>
+  </section>
+  <section class="sec">
+    <span class="tag">Your turn</span>
+    <h2 class="gt">Run with Mochi</h2>
+    <p class="lead">Play the prototype in your browser, race a friend with an invite link, and watch this space for the app, the cartoon and the toys.</p>
+    <div class="row">
+      <a class="btn" href="https://scrien01.github.io/mochi-dash./" target="_blank" rel="noopener">▶ Play now</a>
+      <a class="btn g" id="wa" href="#" target="_blank" rel="noopener">Share on WhatsApp</a>
+      <button class="btn w" id="again">↺ Watch again</button>
+    </div>
+    <p class="small">A Microdrama UK original · Coming to iPhone and Android</p>
+  </section>
+</div>
 
-<script type="module">
-import * as THREE from 'three';
-import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-{
+<div id="loader"><div class="in"><img src="t/p_logo.webp" alt="Mochi: Big City Dash"><div class="lbar"><i id="lfill"></i></div><div id="pct">0%</div>
+  <div id="go" class="row"><button class="btn" id="goS">▶ Enter with sound</button><button class="btn w" id="goQ">Enter quietly</button></div>
+  <p id="ltip">Tip: Bins are too tall to jump. Dodge them!</p></div></div>
+
+<script>
+(()=>{
 const $=id=>document.getElementById(id);
 const GAME='https://scrien01.github.io/mochi-dash./';
-const mobile=matchMedia('(max-width:700px)').matches||matchMedia('(pointer:coarse)').matches;
+// film: one continuous shot per orientation, encoded with every frame a keyframe so scrubbing is instant
+const FILM={land:{v:'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/03d13805-a3ec-4c10-968d-6705cf23551f.mp4',p:'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/c11839a0-c513-4acc-ae3a-fc0e275d2e9d.jpg'},port:{v:'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/725b91bf-f7af-4444-837a-7ecb6378e630.mp4',p:'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/be146ac7-5466-4d4b-a6b5-01b97b8bb90a.jpg'}};
+const portrait=()=>innerHeight>innerWidth*1.05;
+const ori=portrait()?'port':'land';
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const film=$('film'),still=$('still');
+still.src=FILM[ori].p;$('loader').style.backgroundImage=`url(${FILM[ori].p})`;
+
 const CREW=[
- {id:'mochi',name:'Mochi',kind:'Shih Tzu · The hero',power:'Explorer Shield',pd:'Her explorer backpack pops up a bubble that blocks one bump.',bio:'A brave little Shih Tzu who slipped her lead on Brownstone Street and decided the city was far too exciting to leave.',ul:'Playable from the start'},
- {id:'rook',name:'Rook',kind:'Pigeon · Courier',power:'Courier Dash',pd:'Grabs Mochi by the backpack and flies her far down the street, over everything.',bio:'The fastest wings in Manhattan. Knows every rooftop shortcut and has never lost a delivery.',ul:'Joins on Brownstone Street'},
- {id:'bandit',name:'Bandit',kind:'Raccoon · Bin raider',power:'Lid Bash',pd:'For 5 seconds Mochi smashes straight through crates, bins and barriers.',bio:'King of the alleys, with a dented bin lid for a shield. Talks big, eats bigger, loyal to the end.',ul:'Unlock: collect 150 bones'},
- {id:'nuts',name:'Nuts',kind:'Squirrel · Park scout',power:'Nut Magnet',pd:'Every bone in every lane flies straight to Mochi for 6 seconds.',bio:'A hyperactive park scout in flying goggles who has mapped every tree in the city.',ul:'Unlock: 60 bones in one run'},
- {id:'duchess',name:'Duchess',kind:'Persian cat · Charmer',power:'Charm',pd:'Bats her eyes at Officer Grubb. Catcher Alert drops to zero.',bio:'A penthouse cat in real pearls who pretends she is too posh to help, then saves the day anyway.',ul:'Unlock: a run with no bumps'},
- {id:'tank',name:'Tank',kind:'Newfoundland · Big muscle',power:'Bulldoze',pd:'Charges ahead and clears the way: faster, and nothing can stop you.',bio:'A gentle giant and retired harbour rescue dog. Scared of exactly one thing: the vacuum cleaner.',ul:'Unlock: reach City Park 3 times'},
- {id:'pip',name:'Pip',kind:'Hamster · Speed demon',power:'Tiny Turbo',pd:'Mochi shrinks to hamster size and zips harmlessly past every obstacle.',bio:'Escaped from a pet shop in a toy car. Tiny, loud, and sure he is the best driver in New York.',ul:'Unlock: 3 speed ramps in one run'}];
-const CHAPS=['Start','Mochi','The city','The catcher','The crew','Courier Dash','Levels','Play'];
+ {id:'mochi',img:'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/f89ef4be-d7e2-4fc9-963d-41538bba7662.jpg',name:'Mochi',kind:'Shih Tzu · The hero',power:'Explorer Shield',pd:'Her backpack pops up a bubble that blocks one bump.',bio:'Slipped her lead on Brownstone Street and decided the city was far too exciting to leave.',ul:'Playable from the start'},
+ {id:'rook',img:'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/3de66c69-f7a1-44d3-a052-cce043b15ad3.jpg',name:'Rook',kind:'Pigeon · Courier',power:'Courier Dash',pd:'Grabs Mochi by the backpack and flies her far down the street.',bio:'The fastest wings in Manhattan. Knows every rooftop shortcut and has never lost a delivery.',ul:'Joins on Brownstone Street'},
+ {id:'bandit',img:'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/e3774d65-2c62-4841-9a66-f6915aa60aa7.jpg',name:'Bandit',kind:'Raccoon · Bin raider',power:'Lid Bash',pd:'For 5 seconds Mochi smashes straight through crates, bins and barriers.',bio:'King of the alleys, with a dented bin lid for a shield. Talks big, eats bigger.',ul:'Unlock: collect 150 bones'},
+ {id:'nuts',img:'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/edeef22b-ae2b-4684-826b-ee4fbc09a396.jpg',name:'Nuts',kind:'Squirrel · Park scout',power:'Nut Magnet',pd:'Every bone in every lane flies straight to Mochi.',bio:'A hyperactive park scout in flying goggles who has mapped every tree in the city.',ul:'Unlock: 60 bones in one run'},
+ {id:'duchess',img:'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/ccbbc1af-627a-4b83-b13c-4f05fe5cf5b4.jpg',name:'Duchess',kind:'Persian cat · Charmer',power:'Charm',pd:'Bats her eyes at Officer Grubb. Catcher Alert drops to zero.',bio:'A penthouse cat in real pearls who pretends to be too posh to help, then saves the day.',ul:'Unlock: a run with no bumps'},
+ {id:'tank',img:'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/8edc4331-3fbe-43a0-8085-a2488c29b209.jpg',name:'Tank',kind:'Newfoundland · Big muscle',power:'Bulldoze',pd:'Charges ahead and clears the way. Nothing can stop you.',bio:'A gentle giant and retired harbour rescue dog. Scared of exactly one thing: the vacuum.',ul:'Unlock: win 3 times'},
+ {id:'pip',img:'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/55bdcc99-c903-4ed6-90e7-f15b1644f293.jpg',name:'Pip',kind:'Hamster · Speed demon',power:'Tiny Turbo',pd:'Mochi shrinks to hamster size and zips past every obstacle.',bio:'Escaped from a pet shop in a toy car. Tiny, loud, and sure he is the best driver in New York.',ul:'Unlock: 3 speed ramps in one run'},
+ {id:'grubb',img:'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/39028aeb-7879-4560-a947-5f5d9c90c2e5.jpg',name:'Officer Grubb',kind:'Dog catcher · The villain',power:'The Net',pd:'Every bump fills his Catcher Alert. Hit 100% and he scoops you up.',bio:'Thirty years on the job and he has never caught a dog he could not lose again. This time it is personal.',ul:'Always one step behind',villain:1}];
+const crewEl=$('crew');
+CREW.forEach(c=>{const d=document.createElement('article');d.className='card'+(c.villain?' villain':'');
+  d.innerHTML=`<div class="art"><img loading="lazy" alt="${c.name}" src="${c.img}" onerror="this.src='t/crew_${c.id}.webp'"></div><h3>${c.name}</h3><div class="k">${c.kind}</div><div class="pw"><b>${c.power}</b>${c.pd}</div><p>${c.bio}</p><span class="ul">${c.villain?'⚠':'🔓'} ${c.ul}</span>`;crewEl.appendChild(d)});
+const step=()=>crewEl.firstElementChild.getBoundingClientRect().width+18;
+$('prev').onclick=()=>crewEl.scrollBy({left:-step(),behavior:'smooth'});$('next').onclick=()=>crewEl.scrollBy({left:step(),behavior:'smooth'});
+$('wa').href='https://wa.me/?text='+encodeURIComponent('Run with Mochi! 🐶 Mochi: Big City Dash. Watch the world and play the prototype: '+location.href.split('#')[0]);
+$('again').onclick=()=>scrollTo({top:0,behavior:reduce?'auto':'smooth'});
 
-/* ---------- renderer ---------- */
-const canvas=$('gl');let renderer;
-try{renderer=new THREE.WebGLRenderer({canvas,antialias:!mobile,powerPreference:'high-performance'})}catch(e){$('nogl').style.display='grid';$('loader').classList.add('done');throw e}
-renderer.setPixelRatio(Math.min(mobile?1.5:2,devicePixelRatio||1));
-renderer.outputColorSpace=THREE.SRGBColorSpace;
-const scene=new THREE.Scene();
-const HAZE=new THREE.Color('#e9a865');scene.background=HAZE.clone();scene.fog=new THREE.Fog(HAZE,22,150);
-const camera=new THREE.PerspectiveCamera(mobile?62:52,1,.1,600);
-scene.add(new THREE.HemisphereLight('#ffe6c4','#5a2d16',1.6));
-const sun=new THREE.DirectionalLight('#ffd08a',2.2);sun.position.set(-10,20,8);scene.add(sun);
+/* ---- load the film fully first (progress bar), so scrubbing never stalls ---- */
+let dur=15,ready=false;
+function showGo(){$('lfill').style.width='100%';$('pct').textContent='100%';$('go').style.display='flex';$('ltip').textContent='Best with sound. Scroll or swipe to run.'}
+function useSrc(src){film.src=src;film.load();film.addEventListener('loadedmetadata',()=>{dur=film.duration||15;ready=true;showGo()},{once:true});
+  setTimeout(()=>{if(!ready){ready=true;showGo()}},12000)}
+(async()=>{try{const r=await fetch(FILM[ori].v);const total=+r.headers.get('content-length')||0;const rd=r.body.getReader();const parts=[];let got=0;
+  for(;;){const {done,value}=await rd.read();if(done)break;parts.push(value);got+=value.length;if(total){const f=got/total;$('lfill').style.width=(f*100).toFixed(1)+'%';$('pct').textContent=Math.round(f*100)+'%'}}
+  useSrc(URL.createObjectURL(new Blob(parts,{type:'video/mp4'})))}catch(e){useSrc(FILM[ori].v)}})();
+function enter(snd){$('loader').classList.add('done');$('logo').classList.add('on');if(snd)sfx.set(true);film.play().then(()=>{film.pause();film.currentTime=tCur}).catch(()=>{})}
+$('goS').onclick=()=>enter(true);$('goQ').onclick=()=>enter(false);
 
-/* ---------- loading ---------- */
-const mgr=new THREE.LoadingManager();const TL=new THREE.TextureLoader(mgr);
-let shown=0,target=0;
-mgr.onProgress=(u,l,t)=>{target=l/t};
-const tex=(n,rep)=>{const t=TL.load('t/'+n);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=4;if(rep){t.wrapS=t.wrapT=THREE.RepeatWrapping}return t};
-const T={wall:tex('wall_p.jpg',1),facR:tex('facR.jpg',1),floor:tex('floor_p.jpg',1),sky:tex('bg.jpg'),tree:tex('tree.webp'),run:tex('mochi_run2.webp'),grubb:tex('catcher.webp'),rook:tex('pigeon.webp'),bone:tex('treat.webp'),crate:tex('crate3.webp'),barrier:tex('barrier4.webp'),hyd:tex('hydrant.webp')};
-CREW.forEach(c=>T['c_'+c.id]=tex('crew_'+c.id+'.webp'));
-['park','street','water'].forEach(n=>T['lv_'+n]=tex('lv_'+n+'.jpg'));
-function canvasTex(draw,s=128){const c=document.createElement('canvas');c.width=c.height=s;draw(c.getContext('2d'),s);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t}
-const glowT=canvasTex((g,s)=>{const r=g.createRadialGradient(s/2,s/2,0,s/2,s/2,s/2);r.addColorStop(0,'rgba(255,236,180,1)');r.addColorStop(.25,'rgba(255,190,90,.55)');r.addColorStop(1,'rgba(255,160,60,0)');g.fillStyle=r;g.fillRect(0,0,s,s)});
-const shadowT=canvasTex((g,s)=>{const r=g.createRadialGradient(s/2,s/2,0,s/2,s/2,s/2);r.addColorStop(0,'rgba(0,0,0,.55)');r.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=r;g.fillRect(0,0,s,s)});
-const leafT=canvasTex((g,s)=>{g.translate(s/2,s/2);g.fillStyle='#fff';g.beginPath();g.moveTo(0,-s*.45);g.quadraticCurveTo(s*.42,-s*.1,0,s*.45);g.quadraticCurveTo(-s*.42,-s*.1,0,-s*.45);g.fill();g.strokeStyle='rgba(0,0,0,.25)';g.lineWidth=3;g.beginPath();g.moveTo(0,-s*.4);g.lineTo(0,s*.4);g.stroke()},64);
-
-/* ---------- world ---------- */
-const L=-260; // street length (negative z)
-const basic=(map,o={})=>new THREE.MeshBasicMaterial(Object.assign({map,transparent:true,alphaTest:.08,side:THREE.DoubleSide},o));
-// sidewalk + road
-const floor=new THREE.Mesh(new THREE.PlaneGeometry(7,-L+40),new THREE.MeshBasicMaterial({map:T.floor}));
-floor.rotation.x=-Math.PI/2;floor.position.set(0,0,L/2);scene.add(floor);
-T.floor.repeat.set(1,(-L+40)/7);
-const road=new THREE.Mesh(new THREE.PlaneGeometry(12,-L+40),new THREE.MeshBasicMaterial({color:'#5d4a46'}));road.rotation.x=-Math.PI/2;road.position.set(9.5,-.02,L/2);scene.add(road);
-const curb=new THREE.Mesh(new THREE.BoxGeometry(.25,.18,-L+40),new THREE.MeshBasicMaterial({color:'#b9a792'}));curb.position.set(3.55,.09,L/2);scene.add(curb);
-for(let z=-6;z>L;z-=7){const d=new THREE.Mesh(new THREE.PlaneGeometry(.18,3),new THREE.MeshBasicMaterial({color:'#f2c14e'}));d.rotation.x=-Math.PI/2;d.position.set(9.5,.0,z);scene.add(d)}
-// left brownstones: one long facade, tall, textured with the stitched facade from the game
-const fh=17,tileW=fh*932/692;T.wall.repeat.set((-L+40)/tileW,1);
-const left=new THREE.Mesh(new THREE.PlaneGeometry(-L+40,fh),new THREE.MeshBasicMaterial({map:T.wall}));left.rotation.y=Math.PI/2;left.position.set(-3.5,fh/2,L/2);scene.add(left);
-// cornices along the top
-for(let z=-2;z>L;z-=tileW/2){const c=new THREE.Mesh(new THREE.BoxGeometry(1.1,.7,tileW/2-.3),new THREE.MeshStandardMaterial({color:'#7a3b22',roughness:.8}));c.position.set(-3.2,fh+.1,z-tileW/4);scene.add(c)}
-// right side: across-the-road buildings
-const rh=15;T.facR.repeat.set((-L+40)/(rh*5),1);
-const right=new THREE.Mesh(new THREE.PlaneGeometry(-L+40,rh),new THREE.MeshBasicMaterial({map:T.facR}));right.rotation.y=-Math.PI/2;right.position.set(15.6,rh/2,L/2);scene.add(right);
-// sky + skyline backdrop
-const sky=new THREE.Mesh(new THREE.PlaneGeometry(260,147),new THREE.MeshBasicMaterial({map:T.sky,fog:false}));sky.position.set(4,52,L-60);scene.add(sky);
-// trees, lamps, hydrants, fence posts
-const glows=[];
-for(let z=-8,i=0;z>L;z-=11,i++){
-  const plaza=Math.abs(z+96)<7,lplaza=Math.abs(z-5.5+96)<7;
-  if(!plaza){const t=new THREE.Mesh(new THREE.PlaneGeometry(5,9.5),basic(T.tree));t.position.set(3.9,4.75,z);t.userData.bb=1;scene.add(t)}
-  if(!lplaza){  const lz=z-5.5;const pole=new THREE.Mesh(new THREE.CylinderGeometry(.07,.1,5.2,8),new THREE.MeshStandardMaterial({color:'#1d1612',roughness:.5,metalness:.4}));pole.position.set(3.1,2.6,lz);scene.add(pole);
-  const lamp=new THREE.Mesh(new THREE.SphereGeometry(.22,12,10),new THREE.MeshBasicMaterial({color:'#ffe7a8'}));lamp.position.set(3.1,5.3,lz);scene.add(lamp);
-  const g=new THREE.Sprite(new THREE.SpriteMaterial({map:glowT,blending:THREE.AdditiveBlending,depthWrite:false,transparent:true,fog:false}));g.scale.setScalar(2.4);g.position.copy(lamp.position);scene.add(g);glows.push(g);
-  const ban=new THREE.Mesh(new THREE.PlaneGeometry(.55,1.1),new THREE.MeshStandardMaterial({color:'#8e2a1f',side:THREE.DoubleSide}));ban.position.set(3.1,4.1,lz-.32);ban.rotation.y=Math.PI/2;scene.add(ban)}
-  if(i%3===1){const h=new THREE.Mesh(new THREE.PlaneGeometry(.45,.95),basic(T.hyd));h.position.set(2.7,.47,z-2);h.userData.bb=1;scene.add(h)}
-}
-// obstacles + bones along the run
-const bones=[];
-const props=[[T.crate,-1.4,-30,1.3],[T.barrier,1.3,-40,1.9],[T.crate,1.6,-66,1.3],[T.barrier,-1.2,-112,1.9],[T.crate,0,-124,1.3]];
-for(const [m,x,z,w] of props){const im=m.image;const p=new THREE.Mesh(new THREE.PlaneGeometry(w,w*.86),basic(m));p.position.set(x,w*.43,z);p.userData.bb=1;scene.add(p);
-  const s=new THREE.Mesh(new THREE.PlaneGeometry(w*1.2,w*.5),new THREE.MeshBasicMaterial({map:shadowT,transparent:true,depthWrite:false}));s.rotation.x=-Math.PI/2;s.position.set(x,.01,z);scene.add(s)}
-for(let i=0;i<34;i++){const z=-10-i*3.4,x=Math.sin(i*.55)*1.3;const b=new THREE.Mesh(new THREE.PlaneGeometry(.55,.41),basic(T.bone));b.position.set(x,.9,z);b.userData={bone:1,ph:i};scene.add(b);bones.push(b)}
-// Mochi (the game's own run cycle, seen from behind as in the game)
-T.run.repeat.set(1/7,1);
-const mochi=new THREE.Mesh(new THREE.PlaneGeometry(1.15,2.0),basic(T.run));scene.add(mochi);
-const mShadow=new THREE.Mesh(new THREE.PlaneGeometry(1.2,.45),new THREE.MeshBasicMaterial({map:shadowT,transparent:true,depthWrite:false}));mShadow.rotation.x=-Math.PI/2;scene.add(mShadow);
-// Officer Grubb + Rook
-const grubb=new THREE.Mesh(new THREE.PlaneGeometry(4.2,3.72),basic(T.grubb));scene.add(grubb);
-const rook=new THREE.Mesh(new THREE.PlaneGeometry(1.9,1.49),basic(T.rook));scene.add(rook);
-const straps=new THREE.Mesh(new THREE.BoxGeometry(.04,.7,.04),new THREE.MeshBasicMaterial({color:'#3a2a1a'}));scene.add(straps);
-// ---- real 3D models (made with Higgsfield, loaded from its CDN) ----
-const CDN='https://d8j0ntlcm91z4.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/hf_20261125_';
-const GLB={mochi:'095729_0e95ca57-4dc5-4fce-a05e-ec0dc94c46e1',grubb:'095732_a49dc2be-6397-4d78-b587-0c0c007cad35',rook:'095734_3d12267c-36ae-423b-a7bd-30f9f359f7c8',taxi:'095736_e9b05be1-38c9-4915-9de9-9f81e975b7ae',cart:'095738_40ca4f76-fe68-4ee5-9f02-9cab37d3ad9f',nuts:'095739_50cef8b9-9408-4146-9e36-be026d65ab7d',duchess:'095741_8e44ec65-ce4b-4b12-8540-c5877242804c',tank:'095742_603dc5b9-13fa-4214-881e-8b1c95cfff32',bandit:'095807_6c86f800-3dd0-4130-855a-dca209fc3928',pip:'095812_284f6a63-31d8-4b86-ade8-eb34e5b2d401'};
-const SIZE={mochi:['y',1.15],grubb:['y',2.5],rook:['y',1.0],taxi:['z',4.6],cart:['y',2.3],nuts:['y',1.25],duchess:['y',1.15],tank:['y',1.45],bandit:['y',1.4],pip:['y',.95]};
-const gl=new GLTFLoader(mgr);const M={};const slots={};
-// a slot is an empty group placed in the world now; the model drops into it when it arrives
-function slot(name,parent=scene){const g=new THREE.Group();const pv=new THREE.Group();g.add(pv);g.userData.pv=pv;parent.add(g);(slots[name]=slots[name]||[]).push(g);if(M[name])pv.add(M[name].clone());return g}
-function fit(o,[ax,v]){const b=new THREE.Box3().setFromObject(o),sz=b.getSize(new THREE.Vector3());const k=v/sz[ax];o.scale.setScalar(k);b.setFromObject(o);const c=b.getCenter(new THREE.Vector3());o.position.x-=c.x;o.position.z-=c.z;o.position.y-=b.min.y}
-Object.entries(GLB).forEach(([n,id])=>gl.load(CDN+id+'.glb',g=>{const o=g.scene;o.traverse(m=>{if(m.isMesh){const mt=m.material;mt.metalness=0;mt.roughness=.75;if(mt.map)mt.map.anisotropy=4}});fit(o,SIZE[n]);const w=new THREE.Group();w.add(o);M[n]=w;(slots[n]||[]).forEach(s=>s.userData.pv.add(w.clone()));onModel(n)},undefined,()=>{}));
-const blob=(w,d)=>{const s=new THREE.Mesh(new THREE.PlaneGeometry(w,d),new THREE.MeshBasicMaterial({map:shadowT,transparent:true,depthWrite:false}));s.rotation.x=-Math.PI/2;s.position.y=.015;return s};
-const mochi3=slot('mochi'),grubb3=slot('grubb'),rook3=slot('rook');
-function onModel(n){if(n==='mochi'){mochi.visible=false;mochi.userData.off=1}if(n==='grubb')grubb.userData.off=1;if(n==='rook')rook.userData.off=1}
-// parked taxis along the kerb, a couple driving, hot dog carts by the stoops
-for(let z=-14,i=0;z>L+20;z-=23,i++){const t=slot('taxi');t.position.set(5.0,0,z-(i%2)*6);t.rotation.y=Math.PI;t.add(blob(2.6,5.2))}
-const movers=[0,1,2].map(i=>{const t=slot('taxi');t.position.set(i%2?11.5:8.2,0,-20-i*60);t.rotation.y=i%2?0:Math.PI;t.add(blob(2.6,5.2));t.userData.v=i%2?-9:12;return t});
-[[-2.3,-24],[ -2.3,-72],[2.2,-118],[-2.3,-150]].forEach(([x,z])=>{const c=slot('cart');c.position.set(x,0,z);c.rotation.y=x<0?Math.PI/2.4:-Math.PI/2.4;c.add(blob(2.6,1.8))});
-// crew medallions
-const CZ=-96,crew=new THREE.Group();crew.position.set(0,0,CZ);scene.add(crew);
-const gold=new THREE.MeshStandardMaterial({color:'#f2b640',metalness:1,roughness:.28,emissive:'#4a2a00'});
-const portrait=innerWidth<innerHeight;
-const meds=CREW.map((c,i)=>{const g=new THREE.Group();
-  if(portrait){const row=i<4?0:1,col=row?i-4:i,n=row?3:4;g.position.set((col-(n-1)/2)*1.95,row?.35:2.35,1.5)}
-  else{const a=(i-(CREW.length-1)/2)*.36;g.position.set(3.7+Math.sin(a)*5.4,2.4+Math.cos(i*1.3)*.25,-Math.cos(a)*5.4+5.4);g.rotation.y=-a*.8}
-  const plinth=new THREE.Mesh(new THREE.CylinderGeometry(.72,.8,.22,48),gold);plinth.position.y=-.11;
-  const rim=new THREE.Mesh(new THREE.TorusGeometry(.76,.05,10,64),gold);rim.rotation.x=Math.PI/2;
-  const halo=new THREE.Sprite(new THREE.SpriteMaterial({map:glowT,blending:THREE.AdditiveBlending,depthWrite:false,transparent:true,opacity:0,fog:false}));halo.scale.set(2.6,2.6,1);halo.position.y=.8;
-  const hit=new THREE.Mesh(new THREE.PlaneGeometry(1.7,2.2),new THREE.MeshBasicMaterial({visible:false}));hit.position.set(0,.9,.3);
-  const fig=slot(c.id,g);fig.userData.fig=1;fig.scale.setScalar(1.3);
-  g.add(plinth,rim,halo,hit);g.userData={i,base:g.position.y,hover:0,fig,halo};hit.userData.med=g;crew.add(g);return g});
-// floating level cards in the sky
-const LV=[['lv_street','Brownstone Street','Playable now'],['lv_park','City Park','Next up'],['lv_water','Waterfront','Coming soon'],[null,'Rooftops','Coming soon'],[null,'Subway','Coming soon']];
-function labelTex(title,sub,img){return canvasTex((g,s)=>{g.fillStyle='#2a140c';g.fillRect(0,0,s,s);if(img&&img.width){g.drawImage(img,0,0,s,s*.72)}else{const gr=g.createLinearGradient(0,0,0,s*.72);gr.addColorStop(0,title==='Subway'?'#cfd8de':'#1b2a5e');gr.addColorStop(1,title==='Subway'?'#9aa9b5':'#f08a4b');g.fillStyle=gr;g.fillRect(0,0,s,s*.72);g.fillStyle=title==='Subway'?'#f6b93b':'#2b1a2e';
-    if(title==='Subway'){g.beginPath();g.arc(s*.5,s*.36,s*.16,0,7);g.fill();g.fillStyle='#222';g.font=`${s*.2}px "Lilita One",sans-serif`;g.textAlign='center';g.textBaseline='middle';g.fillText('Q',s*.5,s*.37)}else{for(let x=0;x<s;x+=s/9){const h=s*(.15+((x*7)%5)/14);g.fillRect(x,s*.72-h,s/10,h)}}}
-    g.fillStyle='#f6b93b';g.fillRect(0,s*.72,s,4);g.fillStyle='#fff3dc';g.font=`${s*.085}px "Lilita One",sans-serif`;g.textAlign='center';g.fillText(title,s/2,s*.83);g.fillStyle=sub==='Playable now'?'#7be08a':'#f6b93b';g.font=`800 ${s*.052}px Nunito,sans-serif`;g.fillText(sub,s/2,s*.92);
-    g.strokeStyle='#f6b93b';g.lineWidth=s*.025;g.strokeRect(0,0,s,s)},512)}
-const cards=[];const LVZ=-140,LVY=19;
-function buildCards(){LV.forEach((l,i)=>{const t=labelTex(l[1],l[2],l[0]?T[l[0]].image:null);const m=new THREE.Mesh(new THREE.PlaneGeometry(3.2,3.2),new THREE.MeshBasicMaterial({map:t,side:THREE.DoubleSide,fog:false}));
-  const a=(i-2)*.42;m.position.set(Math.sin(a)*8,LVY+Math.cos(i)*.4,LVZ+(1-Math.cos(a))*8);m.rotation.y=-a;m.userData={base:m.position.y,i};scene.add(m);cards.push(m)})}
-// gameplay video screen at the finale
-const vid=document.createElement('video');vid.src='t/hero.mp4';vid.muted=true;vid.loop=true;vid.playsInline=true;vid.crossOrigin='anonymous';
-const vtex=new THREE.VideoTexture(vid);vtex.colorSpace=THREE.SRGBColorSpace;
-const phone=new THREE.Group();const screen=new THREE.Mesh(new THREE.PlaneGeometry(4.5,8),new THREE.MeshBasicMaterial({map:vtex,fog:false}));
-const pframe=new THREE.Mesh(new THREE.BoxGeometry(4.9,8.4,.3),new THREE.MeshStandardMaterial({color:'#140a05',metalness:.6,roughness:.35}));pframe.position.z=-.17;phone.add(pframe,screen);phone.position.set(0,24,-188);scene.add(phone);
-// leaves (instanced)
-const NL=mobile?260:600;const leafGeo=new THREE.PlaneGeometry(.22,.22);
-const leafMat=new THREE.MeshBasicMaterial({map:leafT,transparent:true,alphaTest:.3,side:THREE.DoubleSide,vertexColors:false});
-const leavesM=new THREE.InstancedMesh(leafGeo,leafMat,NL);scene.add(leavesM);
-const LCOL=['#e8611a','#f6b93b','#c2410c','#d9831f','#b5361c','#f2c14e'].map(c=>new THREE.Color(c));
-const LD=[];for(let i=0;i<NL;i++){LD.push({x:(Math.random()-.5)*26,y:Math.random()*24,z:-Math.random()*60,s:.6+Math.random()*.9,r:Math.random()*6,v:.6+Math.random()*.9,w:Math.random()*6});leavesM.setColorAt(i,LCOL[i%6])}
-const dummy=new THREE.Object3D();
-
-/* ---------- post: chromatic aberration + vignette + grain, stronger when you scroll fast ---------- */
-let rt=new THREE.WebGLRenderTarget(2,2,{samples:mobile?0:4});
-const post=new THREE.Mesh(new THREE.PlaneGeometry(2,2),new THREE.ShaderMaterial({uniforms:{tD:{value:null},uAmt:{value:0},uT:{value:0},uRes:{value:new THREE.Vector2(1,1)}},
-  vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}',
-  fragmentShader:`uniform sampler2D tD;uniform float uAmt,uT;uniform vec2 uRes;varying vec2 vUv;
-  float h(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}
-  void main(){vec2 c=vUv-.5;float d=dot(c,c);vec2 uv=vUv+c*d*uAmt*.6;vec2 o=c*(.002+uAmt*.035);
-   vec3 col=vec3(texture2D(tD,uv+o).r,texture2D(tD,uv).g,texture2D(tD,uv-o).b);
-   col*=1.-d*1.15;col+=(h(vUv*uRes+uT)-.5)*.035;gl_FragColor=vec4(col,1.);
-   #include <colorspace_fragment>
-  }`,depthTest:false,depthWrite:false}));
-const postScene=new THREE.Scene();postScene.add(post);const postCam=new THREE.OrthographicCamera(-1,1,1,-1,0,1);
-
-/* ---------- camera journey ---------- */
-// keys: progress, camera position, look target, mochi z, mochi lift
-const K=[
- [0.00,[0,1.35,4.5],[0,1.2,-8],-1.5,0],
- [0.08,[.6,1.6,-2],[0,1.1,-14],-7,0],
- [0.20,[-.5,1.7,-16],[0,1.2,-28],-22,0],
- [0.30,[1.2,7,-27],[-1,6,-62],-34,0],
- [0.38,[.2,2.4,-38],[0,1.3,-54],-46,0],
- [0.46,[-.4,2.1,-52],[0,1.3,-66],-58,0],
- [0.52,portrait?[0,2.5,-82]:[1.6,3.0,-85.2],portrait?[0,3.1,-96]:[1.8,2.5,-97],portrait?-89.5:-91.4,0],
- [0.68,portrait?[0,2.6,-83.5]:[1.6,3.0,-85.8],portrait?[0,3.1,-96]:[1.8,2.5,-97],portrait?-90:-91.6,0],
- [0.74,[1.5,3.2,-96],[0,3,-110],-104,1.2],
- [0.82,[-2,13,-108],[0,12,-128],-120,11],
- [0.88,[0,LVY,-124],[0,LVY,-141],-128,15],
- [0.93,[0,LVY+1.5,-130],[0,LVY+2,-160],-138,15.5],
- [1.00,[0,25,-176],[0,24,-190],-140,16]];
-const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
-const V=(a)=>new THREE.Vector3(...a);
-function at(p){let i=0;while(i<K.length-2&&p>K[i+1][0])i++;const a=K[i],b=K[i+1];const t=ease(Math.min(1,Math.max(0,(p-a[0])/(b[0]-a[0]))));
-  return{pos:V(a[1]).lerp(V(b[1]),t),look:V(a[2]).lerp(V(b[2]),t),mz:a[3]+(b[3]-a[3])*t,lift:a[4]+(b[4]-a[4])*t}}
-
-/* ---------- scroll, input ---------- */
-let p=0,pt=0,vel=0,mx=0,my=0,cmx=0,cmy=0,started=false;
-const maxScroll=()=>document.documentElement.scrollHeight-innerHeight;
-addEventListener('scroll',()=>{pt=Math.min(1,Math.max(0,scrollY/maxScroll()))},{passive:true});
-addEventListener('pointermove',e=>{mx=e.clientX/innerWidth*2-1;my=e.clientY/innerHeight*2-1;const c=$('cursor');c.style.transform=`translate(${e.clientX}px,${e.clientY}px)`});
+/* ---- scroll = playhead ---- */
+let p=0,pt=0,tCur=0,seeking=false,vel=0,lastY=scrollY;
+const filmEnd=()=>$('track').offsetHeight-innerHeight;
+function readScroll(){pt=Math.min(1,Math.max(0,scrollY/filmEnd()))}
+addEventListener('scroll',readScroll,{passive:true});readScroll();
+film.addEventListener('seeked',()=>{seeking=false;if(still.style.opacity!=='0'&&film.readyState>=2)still.style.opacity=0});
 const chs=[...document.querySelectorAll('.ch')];
-CHAPS.forEach((n,i)=>{const b=document.createElement('button');b.innerHTML='<i></i>'+n;b.addEventListener('click',()=>{const a=+chs[i].dataset.a;scrollTo({top:(a+.02)*maxScroll(),behavior:'smooth'})});$('prog').appendChild(b)});
-const progB=[...$('prog').children];
-// crew interaction
-const ray=new THREE.Raycaster(),ndc=new THREE.Vector2();let hoverMed=null,openMed=-1;
-function showCrew(i){const c=CREW[i];openMed=i;$('ccImg').src='t/crew_'+c.id+'.webp';$('ccName').textContent=c.name;$('ccKind').textContent=c.kind;$('ccPow').textContent=c.power;$('ccPd').textContent=c.pd;$('ccBio').textContent=c.bio;$('ccUl').textContent=c.ul;$('crewCard').classList.add('on');
-  [...$('chips').children].forEach((b,j)=>b.classList.toggle('on',j===i));sfx.chime(i)}
-function hideCrew(){openMed=-1;$('crewCard').classList.remove('on');[...$('chips').children].forEach(b=>b.classList.remove('on'))}
-$('ccX').addEventListener('click',hideCrew);
-CREW.forEach((c,i)=>{const b=document.createElement('button');b.textContent=c.name;b.addEventListener('click',()=>showCrew(i));$('chips').appendChild(b)});
-function pick(e){ndc.set(e.clientX/innerWidth*2-1,-(e.clientY/innerHeight)*2+1);ray.setFromCamera(ndc,camera);const h=ray.intersectObjects(crew.children,true).find(x=>x.object.userData.med);return h?h.object.userData.med:null}
-addEventListener('pointermove',e=>{if(p<.48||p>.71){hoverMed=null;return}hoverMed=pick(e);$('cursor').classList.toggle('big',!!hoverMed);document.body.style.cursor=hoverMed?'pointer':''});
-canvas.style.pointerEvents='auto';
-addEventListener('click',e=>{if(e.target!==canvas&&e.target!==document.body&&e.target.id!=='track')return;if(p<.48||p>.71)return;const m=pick(e);if(m)showCrew(m.userData.i)});
-$('again').addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
-$('wa').href='https://wa.me/?text='+encodeURIComponent('Run with Mochi! Mochi: Big City Dash, a game about a Shih Tzu outrunning a dog catcher in New York. Play the prototype: '+GAME);
-
-/* ---------- sound (made in the browser, no files) ---------- */
-const sfx={ctx:null,on:false,master:null,wind:null,
-  init(){if(this.ctx)return;const A=window.AudioContext||window.webkitAudioContext;if(!A)return;const c=this.ctx=new A();const m=this.master=c.createGain();m.gain.value=0;m.connect(c.destination);
-    const n=c.createBuffer(1,c.sampleRate*2,c.sampleRate),d=n.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
-    const src=c.createBufferSource();src.buffer=n;src.loop=true;const f=c.createBiquadFilter();f.type='lowpass';f.frequency.value=420;const g=c.createGain();g.gain.value=.22;src.connect(f).connect(g).connect(m);src.start();this.wind=f;this.windG=g;
-    [196,246.9,293.7,392].forEach((fq,i)=>{const o=c.createOscillator();o.type='sine';o.frequency.value=fq;const og=c.createGain();og.gain.value=.018;const lfo=c.createOscillator();lfo.frequency.value=.07+i*.03;const lg=c.createGain();lg.gain.value=.012;lfo.connect(lg).connect(og.gain);o.connect(og).connect(m);o.start();lfo.start()})},
-  set(v){this.init();if(!this.ctx)return;this.on=v;this.ctx.resume&&this.ctx.resume();this.master.gain.setTargetAtTime(v?.9:0,this.ctx.currentTime,.4);$('sound').classList.toggle('on',v);$('sound').setAttribute('aria-pressed',v);$('sound').querySelector('span').textContent=v?'Sound on':'Sound off'},
-  tick(v){if(!this.on)return;this.wind.frequency.setTargetAtTime(380+Math.min(2400,v*26000),this.ctx.currentTime,.1);this.windG.gain.setTargetAtTime(.18+Math.min(.5,v*6),this.ctx.currentTime,.1)},
-  chime(i){if(!this.on)return;const c=this.ctx,t=c.currentTime;[523.3,659.3,784,1046.5].forEach((f,k)=>{const o=c.createOscillator(),g=c.createGain();o.type='triangle';o.frequency.value=f*(1+i*.02);g.gain.setValueAtTime(0,t+k*.06);g.gain.linearRampToValueAtTime(.08,t+k*.06+.01);g.gain.exponentialRampToValueAtTime(.0001,t+k*.06+.5);o.connect(g).connect(this.master);o.start(t+k*.06);o.stop(t+k*.06+.55)})},
-  bark(){if(!this.on)return;const c=this.ctx,t=c.currentTime,o=c.createOscillator(),g=c.createGain();o.type='square';o.frequency.setValueAtTime(700,t);o.frequency.exponentialRampToValueAtTime(380,t+.09);g.gain.setValueAtTime(.08,t);g.gain.exponentialRampToValueAtTime(.0001,t+.12);o.connect(g).connect(this.master);o.start(t);o.stop(t+.13)}};
-$('sound').addEventListener('click',()=>sfx.set(!sfx.on));
-
-/* ---------- resize ---------- */
-function resize(){const w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.fov=w<h?66:52;camera.updateProjectionMatrix();const pr=renderer.getPixelRatio();rt.setSize(w*pr,h*pr);post.material.uniforms.uRes.value.set(w,h)}
-addEventListener('resize',resize);resize();
-
-/* ---------- loop ---------- */
-const clock=new THREE.Timer();let lastChap=-1,frame=0,lastBark=0;
-const look=new THREE.Vector3(),camPos=new THREE.Vector3(),tmpA=new THREE.Vector3(),tmpB=new THREE.Vector3();
-function loop(ts){clock.update(ts);const dt=Math.min(.05,clock.getDelta()),t=clock.getElapsed();
-  const prev=p;p+=(pt-p)*(reduce?1:Math.min(1,dt*4.5));vel+=((p-prev)/Math.max(dt,.001)*.06-vel)*.15;
-  const s=at(p);cmx+=(mx-cmx)*.05;cmy+=(my-cmy)*.05;
-  const fw=Math.min(1,Math.max(0,(p-.7)/.04))*(1-Math.min(1,Math.max(0,(p-.83)/.05)));
-  const my0=1.0+s.lift;camPos.copy(s.pos).lerp(tmpA.set(.3,my0+.7,s.mz+5.6),fw);look.copy(s.look).lerp(tmpB.set(0,my0+1.1,s.mz-7),fw);
-  camera.position.copy(camPos).add(tmpA.set(cmx*.5,-cmy*.3,0));look.add(tmpB.set(cmx*1.2,-cmy*.6,0));camera.lookAt(look);
-  // mochi: run while moving, idle-bob in the crew plaza, lifted by Rook
-  const moving=Math.abs(p-prev)>1e-5||p<.47;const fr=Math.floor(t*(moving?13:4))%7;T.run.offset.x=fr/7;
-  const lift=s.lift;mochi.position.set(0,1.0+lift+(lift>0?Math.sin(t*3)*.12:0),s.mz);mochi.lookAt(camera.position.x,mochi.position.y,camera.position.z);
-  // the real 3D Mochi: gallops away from the camera, turns to say hello at the start and in the crew plaza
-  const faceCam=p<.05||(p>.5&&p<.69);const wantYaw=faceCam?0:Math.PI;mochi3.rotation.y+=(wantYaw-mochi3.rotation.y)*Math.min(1,dt*5);
-  const gal=moving&&lift<.3&&!faceCam?1:0;mochi3.userData.g=(mochi3.userData.g||0)+(gal-(mochi3.userData.g||0))*Math.min(1,dt*6);const gg=mochi3.userData.g,ph=t*12;
-  mochi3.position.set(0,lift>0?mochi.position.y-1.0+.25:0,s.mz);const pv=mochi3.userData.pv;pv.position.y=Math.abs(Math.sin(ph))*.16*gg+(1-gg)*Math.abs(Math.sin(t*2))*.03;pv.rotation.x=Math.sin(ph)*.13*gg+(lift>0?-.25:0);pv.rotation.z=Math.sin(ph*.5)*.04*gg;pv.scale.set(1,1-Math.abs(Math.cos(ph))*.05*gg,1+Math.abs(Math.cos(ph))*.06*gg);
-  mShadow.position.set(0,.02,s.mz);mShadow.material.opacity=Math.max(0,1-lift/4);mShadow.scale.setScalar(1/(1+lift*.3));
-  // Grubb chases from behind during the catcher chapter, falls back during the flight
-  const gIn=Math.min(1,Math.max(0,(p-.33)/.07))*Math.max(0,1-Math.max(0,(p-.46)/.04));const gz=s.mz+3.2-gIn*1.2+Math.max(0,p-.46)*40;
-  grubb.position.set(-1.1+Math.sin(t*6)*.06,1.8+Math.abs(Math.sin(t*7))*.15,gz);grubb.visible=!grubb.userData.off&&gIn>.01&&p<.82;grubb3.visible=gIn>.01&&p<.82;grubb3.position.set(-1.1,0,gz);grubb3.rotation.y=Math.PI+Math.sin(t*3)*.08;grubb3.userData.pv.position.y=Math.abs(Math.sin(t*7))*.12;grubb3.userData.pv.rotation.z=Math.sin(t*7)*.06;grubb.material.opacity=gIn;grubb.lookAt(camera.position.x,grubb.position.y,camera.position.z);
-  const alert=Math.min(100,Math.max(0,(p-.36)/.09*100));$('mFill').style.width=alert+'%';$('mPct').textContent=Math.round(alert)+'%';
-  if(gIn>.5&&t-lastBark>2.2&&p<.47){lastBark=t;sfx.bark()}
-  // Rook swoops in and carries her
-  const rIn=Math.min(1,Math.max(0,(p-.69)/.05)),rOut=Math.max(0,(p-.9)/.05);
-  rook.visible=!rook.userData.off&&rIn>0&&rOut<1;rook3.visible=rIn>0&&rOut<1;rook.position.set((1-rIn)*8+Math.sin(t*2)*.1,mochi.position.y+1.55+(1-rIn)*6+rOut*6,s.mz-(1-rIn)*4);rook.scale.y=.9+Math.abs(Math.sin(t*14))*.18;rook.lookAt(camera.position.x,rook.position.y,camera.position.z);rook3.position.set(rook.position.x,rook.position.y-.9,rook.position.z);rook3.rotation.set(-.35,Math.PI,0);rook3.userData.pv.position.y=Math.sin(t*14)*.06;rook3.userData.pv.scale.x=1+Math.abs(Math.sin(t*14))*.18;
-  straps.visible=rIn>=1&&lift>.3&&rOut<.2;straps.position.set(0,mochi.position.y+.37,s.mz);
-  // billboards face the camera (yaw only)
-  // bones spin and get collected as Mochi passes
-  for(const b of bones){b.rotation.y=t*2+b.userData.ph;b.position.y=.9+Math.sin(t*3+b.userData.ph)*.12;b.visible=b.position.z<s.mz+.6||p>.5}
-  // medallions
-  for(const g of meds){const hv=g===hoverMed||g.userData.i===openMed,u=g.userData;u.hover+=((hv?1:0)-u.hover)*.15;g.position.y=u.base+Math.sin(t*1.4+u.i)*.08;g.scale.setScalar(1+u.hover*.15);u.fig.rotation.y=Math.sin(t*.7+u.i)*.35+u.hover*Math.sin(t*4)*.25;u.fig.userData.pv.position.y=u.hover*Math.abs(Math.sin(t*6))*.25;u.halo.material.opacity=u.hover*.9}
-  crew.visible=p>.4&&p<.8;
-  for(const c of cards){c.position.y=c.userData.base+Math.sin(t*1.1+c.userData.i)*.25;c.rotation.z=Math.sin(t*.7+c.userData.i)*.03}
-  for(const m of movers){m.position.z+=(m.rotation.y?-1:1)*Math.abs(m.userData.v)*dt;if(m.position.z<L)m.position.z=10;if(m.position.z>12)m.position.z=L+2}
-  phone.rotation.y=Math.sin(t*.5)*.15;phone.position.y=24+Math.sin(t*.9)*.3;
-  if(p>.9&&vid.paused)vid.play().catch(()=>{});
-  // lamps flicker gently
-  for(let i=0;i<glows.length;i++)glows[i].material.opacity=.75+Math.sin(t*3+i)*.08;
-  // leaves follow the camera
-  const cz=camera.position.z,cy=camera.position.y;
-  for(let i=0;i<NL;i++){const f=LD[i];f.y-=f.v*dt;f.w+=dt;f.r+=dt*1.6;if(f.y<cy-8)f.y=cy+14+Math.random()*4;if(f.z>cz+4)f.z-=60;if(f.z<cz-56)f.z+=60;
-    dummy.position.set(f.x+Math.sin(f.w)*.8,f.y,f.z);dummy.rotation.set(f.r,f.r*.7,f.r*.3);dummy.scale.setScalar(f.s);dummy.updateMatrix();leavesM.setMatrixAt(i,dummy.matrix)}
-  leavesM.instanceMatrix.needsUpdate=true;
-  // fog lifts as we fly
-  scene.fog.far=150+Math.max(0,camera.position.y-5)*14;
-  // chapters + progress
-  let ci=0;chs.forEach((c,i)=>{const on=p>=+c.dataset.a&&p<+c.dataset.b;c.classList.toggle('on',on&&started);if(on)ci=i});
-  if(ci!==lastChap){lastChap=ci;progB.forEach((b,i)=>b.classList.toggle('on',i===ci));if(started)sfx.chime(ci%4);if(ci!==4)hideCrew()}
-  $('hint').style.opacity=p<.02&&started?.85:0;
+function tick(){
+  const prevP=p;p+=(pt-p)*(reduce?1:.14);vel+=((p-prevP)-vel)*.2;
+  const want=Math.min(dur-.05,p*dur);
+  if(ready&&!seeking&&Math.abs(want-film.currentTime)>.015){seeking=true;tCur=want;try{if(film.fastSeek&&Math.abs(want-film.currentTime)>1)film.fastSeek(want);else film.currentTime=want}catch(e){seeking=false}}
+  // a breath of zoom with speed, like the game's speed lines
+  const z=1+Math.min(.06,Math.abs(vel)*6);film.style.transform=`scale(${z.toFixed(4)})`;
+  chs.forEach(c=>c.classList.toggle('on',p>=+c.dataset.a&&p<+c.dataset.b&&scrollY<filmEnd()+20));
+  $('hint').style.opacity=scrollY<30?.9:0;
+  const all=document.documentElement.scrollHeight-innerHeight;$('bar').firstElementChild.style.width=(scrollY/all*100)+'%';
+  const after=Math.min(1,Math.max(0,(scrollY-filmEnd())/(innerHeight*.6)));$('shade').style.opacity=after;
   sfx.tick(Math.abs(vel));
-  // render with post
-  const amt=Math.min(1.2,Math.abs(vel)*9);post.material.uniforms.uAmt.value=reduce?0:amt;post.material.uniforms.uT.value=(frame++%100);
-  renderer.setRenderTarget(rt);renderer.render(scene,camera);renderer.setRenderTarget(null);post.material.uniforms.tD.value=rt.texture;renderer.render(postScene,postCam);
-  requestAnimationFrame(loop)}
+  leaves(Math.abs(vel));
+  requestAnimationFrame(tick)}
 
-/* ---------- start ---------- */
-let loadedAll=false;
-mgr.onLoad=()=>{loadedAll=true;target=1;buildCards()};
-(function count(){shown+=(target-shown)*.12;const v=Math.round(shown*100);$('pct').textContent=v;$('bar').style.width=v+'%';
-  if(loadedAll&&v>=99){$('pct').textContent='100';$('bar').style.width='100%';$('enter').style.display='flex';$('lmsg').textContent='Best with headphones. Scroll or swipe to run.';return}requestAnimationFrame(count)})();
-setTimeout(()=>{if(!loadedAll){loadedAll=true;target=1;try{buildCards()}catch(e){}}},15000);
-function enter(snd){$('loader').classList.add('done');started=true;if(snd)sfx.set(true);vid.play().then(()=>vid.pause()).catch(()=>{})}
-$('enterS').addEventListener('click',()=>enter(true));$('enterQ').addEventListener('click',()=>enter(false));
-requestAnimationFrame(loop);
-}
+/* ---- falling leaves over the film ---- */
+const lc=$('leaves'),lx=lc.getContext('2d');let LW,LH;const COLS=['#e8611a','#f6b93b','#c2410c','#d9831f','#b5361c','#f2c14e'];
+const L=[];function rs(){const d=Math.min(2,devicePixelRatio||1);LW=lc.width=innerWidth*d;LH=lc.height=innerHeight*d;lx.setTransform(d,0,0,d,0,0)}rs();addEventListener('resize',rs);
+const NL=reduce?0:(innerWidth<700?14:26);for(let i=0;i<NL;i++)L.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,s:8+Math.random()*12,r:Math.random()*6,v:.4+Math.random()*.8,w:Math.random()*6,c:COLS[i%6]});
+function leaves(v){lx.clearRect(0,0,innerWidth,innerHeight);for(const f of L){f.y+=f.v*(1+v*400);f.w+=.02;f.r+=.03+v*8;f.x+=Math.sin(f.w)*.6;if(f.y>innerHeight+20){f.y=-20;f.x=Math.random()*innerWidth}
+  lx.save();lx.translate(f.x,f.y);lx.rotate(f.r);lx.scale(1,Math.cos(f.w*2));lx.fillStyle=f.c;lx.globalAlpha=.85;lx.beginPath();lx.moveTo(0,-f.s/2);lx.quadraticCurveTo(f.s/2,0,0,f.s/2);lx.quadraticCurveTo(-f.s/2,0,0,-f.s/2);lx.fill();lx.restore()}}
+
+/* ---- sound, made in the browser ---- */
+const sfx={c:null,on:false,m:null,
+  init(){if(this.c)return;const A=window.AudioContext||window.webkitAudioContext;if(!A)return;const c=this.c=new A();const m=this.m=c.createGain();m.gain.value=0;m.connect(c.destination);
+    const n=c.createBuffer(1,c.sampleRate*2,c.sampleRate),d=n.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+    const s=c.createBufferSource();s.buffer=n;s.loop=true;const f=this.f=c.createBiquadFilter();f.type='lowpass';f.frequency.value=400;const g=this.g=c.createGain();g.gain.value=.15;s.connect(f).connect(g).connect(m);s.start();
+    // a bouncy little pizzicato theme
+    const notes=[392,494,587,659,587,494,440,494,392,330,392,440];let k=0;setInterval(()=>{if(!this.on)return;const t=c.currentTime,o=c.createOscillator(),og=c.createGain();o.type='triangle';o.frequency.value=notes[k++%notes.length];og.gain.setValueAtTime(.0001,t);og.gain.exponentialRampToValueAtTime(.07,t+.01);og.gain.exponentialRampToValueAtTime(.0001,t+.35);o.connect(og).connect(m);o.start(t);o.stop(t+.4)},260)},
+  set(v){this.init();if(!this.c)return;this.on=v;this.c.resume&&this.c.resume();this.m.gain.setTargetAtTime(v?.8:0,this.c.currentTime,.3);$('sound').classList.toggle('on',v);$('sound').setAttribute('aria-pressed',v);$('sound').querySelector('span').textContent=v?'Sound on':'Sound off'},
+  tick(v){if(!this.on)return;this.f.frequency.setTargetAtTime(400+Math.min(3000,v*300000),this.c.currentTime,.1);this.g.gain.setTargetAtTime(.12+Math.min(.5,v*400),this.c.currentTime,.1)}};
+$('sound').onclick=()=>sfx.set(!sfx.on);
+
+requestAnimationFrame(tick);
+})();
 </script>
 </body>
 </html>
