@@ -8,7 +8,7 @@
 <style>
 /*
 VOICE: playful kids' arcade, warm and cheeky
-IDEA: the Higgsfield gameplay concept brought to life: behind-Mochi chase down an autumn New York street
+IDEA: the Higgsfield gameplay concept brought to life: behind-Mochi chase down an autumn Waggleton high street
 PICTURE: the painted street fills the screen, Mochi runs at its centre
 COLOUR and TYPE: golden-hour amber, brownstone brown, taxi yellow, olive; Fredoka
 LAYOUT: full-bleed canvas, HUD in the corners like the concept, overlays centred
@@ -135,7 +135,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:#1d140c;font-family:Fr
 </style>
 </head>
 <body>
-<canvas id="game" aria-label="Mochi running down a New York street"></canvas>
+<canvas id="game" aria-label="Mochi running down Waggleton High Street"></canvas>
 
 <div class="hud" id="treats"><img src="a/treat.webp" alt=""><span>× <span id="treatN">0</span></span></div>
 <div class="hud" id="alert"><div class="box"><b>🚨 CATCHER ALERT</b><div class="bar"><div id="alertFill"></div></div></div><img src="a/ic_catcher.webp" alt=""></div>
@@ -154,7 +154,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:#1d140c;font-family:Fr
 <div class="scr" id="loadScr"><img class="blur" src="https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/5973e544-229d-4dd5-915f-e05b0ce16e5d.jpg" alt=""><div class="stage land"><img src="https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/5973e544-229d-4dd5-915f-e05b0ce16e5d.jpg" alt="Waggleton Town loading screen"><div id="ldTrack"><div id="ldFill" class="ldF"></div></div></div>
 <div class="port"><img class="bgp" src="https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/5973e544-229d-4dd5-915f-e05b0ce16e5d.jpg" alt="" style="object-position:72% 50%"><div class="pcol" style="top:max(14px,env(safe-area-inset-top))"><img src="https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/1b56b6f6-c93e-4eb9-824e-cd611479e859.webp" alt="Waggleton Town" style="width:min(82vw,400px)"></div>
 <div style="position:absolute;left:0;right:0;bottom:0;height:44%;background:linear-gradient(rgba(58,36,18,0),rgba(58,36,18,.97) 26%,#3a2412)"></div><div class="pcol" style="bottom:max(22px,env(safe-area-inset-bottom))"><div id="pBarWrap"><img src="a/p_bar.webp" alt="Loading"><div id="pTrack"><div class="ldF"></div></div></div><img src="a/p_tip.webp" alt="Tip: Bins are too tall to jump. Dodge them!" style="width:min(88vw,430px)"></div></div></div>
-<div class="scr" id="menuScr" hidden><button class="sndB" id="sndMenu" aria-label="Sound on or off">🔈</button><img class="blur" src="https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/5c172045-c2ec-4b30-97da-8e5eec138312.jpg" alt=""><div class="stage land"><img src="https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/5c172045-c2ec-4b30-97da-8e5eec138312.jpg" alt="Waggleton Town main menu">
+<div class="scr" id="menuScr" hidden><button class="sndB" id="sndMenu" aria-label="Sound on or off">🔈</button><img class="blur" src="https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/667493df-c8a3-49be-807c-e28decba1b84.jpg" alt=""><div class="stage land"><img src="https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/667493df-c8a3-49be-807c-e28decba1b84.jpg" alt="Waggleton Town main menu">
   <div id="menuBest">0</div>
   <button class="hot" id="mPlay" aria-label="Play" style="left:5.4%;top:29.9%;width:22.9%;height:12%"></button>
   <button class="hot" id="mLevels" aria-label="Levels" style="left:6%;top:42.7%;width:20.5%;height:8%"></button>
@@ -163,11 +163,11 @@ html,body{margin:0;height:100%;overflow:hidden;background:#1d140c;font-family:Fr
   <button class="hot" id="mSettings" aria-label="Settings" style="left:6%;top:68.2%;width:20.5%;height:8%"></button>
   <button class="hot" id="tBrown" aria-label="Play Waggleton High Street" style="left:1.5%;top:77.1%;width:11%;height:18.9%;border-radius:12px"></button>
   <button class="hot" id="tPark" aria-label="Muddlecombe, coming soon" style="left:13.1%;top:77.1%;width:10.6%;height:18.9%;border-radius:12px"></button>
-  <button class="hot" id="tWater" aria-label="Waterfront, coming soon" style="left:24.3%;top:77.1%;width:10.3%;height:18.9%;border-radius:12px"></button>
+  <button class="hot" id="tWater" aria-label="Saltwhistle Bay, coming soon" style="left:24.3%;top:77.1%;width:10.3%;height:18.9%;border-radius:12px"></button>
   <div class="lock" style="left:13.1%;top:77.1%;width:10.6%;height:15%">🔒<br>Soon</div>
   <div class="lock" style="left:24.3%;top:77.1%;width:10.3%;height:15%">🔒<br>Soon</div>
 </div>
-<div class="port"><img class="bgp" src="https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/5c172045-c2ec-4b30-97da-8e5eec138312.jpg" alt="" style="object-position:86% 50%">
+<div class="port"><img class="bgp" src="https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/667493df-c8a3-49be-807c-e28decba1b84.jpg" alt="" style="object-position:86% 50%">
   <div id="pBest"><img src="a/treat.webp" alt="">× <span id="pBestN">0</span></div>
   <div class="pcol" style="top:calc(max(14px,env(safe-area-inset-top)) + 40px)"><img src="https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/1b56b6f6-c93e-4eb9-824e-cd611479e859.webp" alt="Waggleton Town" style="width:min(80vw,380px)"></div>
   <div class="pcol" style="bottom:max(18px,env(safe-area-inset-bottom))">
@@ -176,14 +176,14 @@ html,body{margin:0;height:100%;overflow:hidden;background:#1d140c;font-family:Fr
     <button class="pbtn" id="pRace" aria-label="Multiplayer: race with friends"><img src="a/p_race.webp" alt="" style="width:min(64vw,270px)"></button>
     <button class="pbtn" id="pCrew" aria-label="My crew"><img src="a/p_crew.webp" alt="" style="width:min(64vw,270px)"></button>
     <button class="pbtn" id="pSet" aria-label="Settings"><img src="a/p_set.webp" alt="" style="width:min(64vw,270px)"></button>
-    <div id="pTiles"><img src="a/p_tiles.webp" alt=""><button id="pT1" style="left:0" aria-label="Play Waggleton High Street"></button><button id="pT2" style="left:34%" aria-label="Muddlecombe, coming soon"></button><button id="pT3" style="left:67.5%" aria-label="Waterfront, coming soon"></button><div class="lk" style="left:36%">🔒<br>Soon</div><div class="lk" style="left:69%">🔒<br>Soon</div></div>
+    <div id="pTiles"><img src="https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/70cc2216-221a-4618-b9a1-1af08b05a51c.webp" alt=""><button id="pT1" style="left:0" aria-label="Play Waggleton High Street"></button><button id="pT2" style="left:34%" aria-label="Muddlecombe, coming soon"></button><button id="pT3" style="left:67.5%" aria-label="Saltwhistle Bay, coming soon"></button><div class="lk" style="left:36%">🔒<br>Soon</div><div class="lk" style="left:69%">🔒<br>Soon</div></div>
   </div>
 </div></div>
 <div class="overlay" id="levelsOv" hidden><div class="card"><h1>Levels</h1><div class="tiles">
   <button class="tile" id="lv1">Waggleton High Street <em>▶ Play</em></button>
   <button class="tile locked" disabled>Muddlecombe <em>🔒 Coming soon</em></button>
-  <button class="tile locked" disabled>Waterfront <em>🔒 Coming soon</em></button>
-  <button class="tile locked" disabled>Rooftops <em>🔒 Coming soon</em></button>
+  <button class="tile locked" disabled>Saltwhistle Bay <em>🔒 Coming soon</em></button>
+  <button class="tile locked" disabled>Cogsbury Locks <em>🔒 Coming soon</em></button>
 </div><button class="btn ghost" data-close>Back</button></div></div>
 <div class="overlay" id="posterOv" hidden><div class="card"><img src="a/poster.jpg" alt="Mochi and her crew"><p>Mochi, Rook, Bandit, Duchess, Nuts, Tank and Pip. Rook joins you on Waggleton High Street; the rest of the crew unlock in later levels.</p><button class="btn ghost" data-close>Back</button></div></div>
 <div class="overlay" id="setOv" hidden><div class="card"><h1>Settings</h1><div class="tiles">
@@ -238,8 +238,8 @@ const cv=document.getElementById('game'),cx=cv.getContext('2d');
 const $=id=>document.getElementById(id);
 const IMG={};const names=['bg.jpg','floor.jpg','facL.jpg','facR.jpg','bg_p.jpg','floor_p.jpg','wall_p.jpg','chevron.webp','crate3.webp','barrier3.webp','barrier4.webp','fence_p.jpg','mochi_run2.webp','tree.webp','hydrant.webp','bin2.webp','taxi.webp','treat.webp','pigeon.webp','catcher.webp'];
 let loaded=0;
-const WAG={'wag_bg.jpg':'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/c80cd344-1485-4297-b956-a78e0cea8f80.jpg','wag_floor.jpg':'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/9532fdc5-1a96-4640-af9d-5c30a4ef01cb.jpg','wag_wall.jpg':'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/4e822503-d375-44ea-bcd9-e51008c95ad4.jpg','wag_fence.webp':'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/680de417-5234-431e-bf65-21415de37245.webp','wag_jump1.webp':'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/3a767036-8c8e-4764-8daa-a3c557216eba.webp','wag_jump2.webp':'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/af809826-2159-4374-b94a-8cc290584787.webp','wag_tall.webp':'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/91d30eba-df96-4276-ac29-be2c940a63d7.webp','wag_big.webp':'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/e67c688b-6bd5-4c93-b383-22dc628e236c.webp'};names.push(...Object.keys(WAG));names.push('menu.jpg','poster.jpg','cart.webp','crew_mochi.webp','crew_rook.webp','crew_bandit.webp','crew_nuts.webp','crew_duchess.webp','crew_tank.webp','crew_pip.webp');const T0=performance.now();
-names.forEach(n=>{const i=new Image();i.onload=()=>{++loaded;document.querySelectorAll('.ldF').forEach(e=>e.style.width=(loaded/names.length*100)+'%');if(loaded===names.length){$('playBtn').disabled=false;$('playBtn').textContent="Let's go!";setTimeout(showMenu,Math.max(600,2600-(performance.now()-T0)))}};i.onerror=i.onload;i.src=WAG[n]||({'menu.jpg':'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/5c172045-c2ec-4b30-97da-8e5eec138312.jpg'})[n]||'a/'+n;IMG[n.split('.')[0]]=i});
+const WAG={'wag_bgL.jpg':'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/83edd180-e577-4d61-9cb7-299dd0b39c3e.jpg','wag_floorL.jpg':'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/9ea1d765-58bf-469d-bc45-5a71f722596d.jpg','wag_facL.jpg':'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/dbb46e55-8ebe-41c9-9086-f4ba8102605a.jpg','wag_facR.jpg':'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/8e10cd3d-9158-4cec-8cd0-edcce8d86758.jpg','wag_bg.jpg':'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/c80cd344-1485-4297-b956-a78e0cea8f80.jpg','wag_floor.jpg':'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/9532fdc5-1a96-4640-af9d-5c30a4ef01cb.jpg','wag_wall.jpg':'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/4e822503-d375-44ea-bcd9-e51008c95ad4.jpg','wag_fence.webp':'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/680de417-5234-431e-bf65-21415de37245.webp','wag_jump1.webp':'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/3a767036-8c8e-4764-8daa-a3c557216eba.webp','wag_jump2.webp':'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/af809826-2159-4374-b94a-8cc290584787.webp','wag_tall.webp':'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/91d30eba-df96-4276-ac29-be2c940a63d7.webp','wag_big.webp':'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/e67c688b-6bd5-4c93-b383-22dc628e236c.webp'};names.push(...Object.keys(WAG));names.push('menu.jpg','poster.jpg','cart.webp','crew_mochi.webp','crew_rook.webp','crew_bandit.webp','crew_nuts.webp','crew_duchess.webp','crew_tank.webp','crew_pip.webp');const T0=performance.now();
+names.forEach(n=>{const i=new Image();i.onload=()=>{++loaded;document.querySelectorAll('.ldF').forEach(e=>e.style.width=(loaded/names.length*100)+'%');if(loaded===names.length){$('playBtn').disabled=false;$('playBtn').textContent="Let's go!";setTimeout(showMenu,Math.max(600,2600-(performance.now()-T0)))}};i.onerror=i.onload;i.src=WAG[n]||({'menu.jpg':'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/667493df-c8a3-49be-807c-e28decba1b84.jpg'})[n]||'a/'+n;IMG[n.split('.')[0]]=i});
 
 // painted street geometry (bg.jpg px, 1360x768)
 // two scenes: landscape = painted street, portrait = street built from the gameplay footage
@@ -270,8 +270,8 @@ function makeCart(){const c=document.createElement('canvas');c.width=640;c.heigh
   for(const x of[140,500]){g.fillStyle='#211c1a';g.beginPath();g.arc(x,690,48,0,7);g.fill();g.fillStyle='#9ea3ad';g.beginPath();g.arc(x,690,20,0,7);g.fill()}
   const im=new Image();im.src=c.toDataURL('image/png');return im}
 const SCN={
- L:{bg:'bg',BW:1360,BH:768,MX:660,GY:702,VPX:755,VPY:415,LANEBG:250,mochiH:165,floor:'floor',FS:[[-5.78,-3.95,0,59],[-3.95,3.6,59,229],[3.6,5.9,229,305]],FPZ:81,FZ0:0,FTH:2720,SC:{tl:-3.7,tr:4.1,th:3.5,hy:3.3,hyH:.55},PS:1,LX:1,
-    WALLS:[{im:'facL',l:-5.78,h:4.3,rate:278,z0:1.91,tw:2200,th:400},{im:'facR',l:5.89,h:5.2,rate:332,z0:2.44,tw:2000,th:400}]},
+ L:{bg:'wag_bgL',BW:1360,BH:768,MX:660,GY:702,VPX:733,VPY:420,LANEBG:250,mochiH:165,floor:'wag_floorL',noHyd:1,FS:[[-5.78,-3.95,0,59],[-3.95,3.6,59,229],[3.6,5.9,229,305]],FPZ:81,FZ0:0,FTH:2720,SC:{tl:-3.7,tr:4.1,th:3.5,hy:3.3,hyH:.55},PS:1,LX:1,
+    WALLS:[{im:'wag_facL',l:-5.78,h:4.3,rate:278,z0:1.91,tw:2922,th:400},{im:'wag_facR',l:5.89,h:5.2,rate:332,z0:2.44,tw:4212,th:400}]},
  P:{bg:'wag_bg',BW:1980,BH:1920,MX:957,GY:1647,VPX:957,VPY:791,LANEBG:1050,mochiH:550,floor:'wag_floor',noHyd:1,FS:[[-1.7,1.72,0,700]],FPZ:200,FZ0:3.3,FTH:720,
     WALLS:[{im:'wag_wall',l:-1.7,h:4.325,rate:170,z0:3.45,tw:1691,th:692},{im:'wag_fence',l:1.72,h:.9,rate:460,z0:3.35,tw:1600,th:424}],
     SC:{tl:null,tr:2.05,th:5.5,hy:1.5,hyH:.32,lamp:1.85},PS:1,LX:.55,
@@ -300,7 +300,7 @@ function reset(){
   for(let i=0;i<46;i++)S.gl.push(gleaf(1+Math.random()*15));
   if(C.SC.lamp){for(let z=.6;z<18;z+=3.6){S.sc.push({k:'tree',side:1,z,span:18});S.sc.push({k:'lamp',z:z+1.8,span:18})}if(!C.noHyd)for(let z=5;z<17;z+=9)S.sc.push({k:'hyd',side:1,z,span:18})}
   else{for(let z=.5;z<17;z+=2.4){S.sc.push({k:'tree',side:-1,z});S.sc.push({k:'tree',side:1,z:z+1.2})}
-  for(let z=3;z<17;z+=7.5)S.sc.push({k:'hyd',side:1,z});}
+  if(!C.noHyd)for(let z=3;z<17;z+=7.5)S.sc.push({k:'hyd',side:1,z});}
   updHud();
 }
 function leaf(any){return{x:Math.random()*W,y:any?Math.random()*H*.6:-20,vx:(Math.random()-.5)*25,vy:20+Math.random()*30,r:Math.random()*6,vr:(Math.random()-.5)*3,s:5+Math.random()*6,c:['#e8791e','#d8342b','#f5b82e','#c2410c','#a83a1a'][Math.random()*5|0]}}
@@ -742,7 +742,7 @@ $('rCode').addEventListener('keydown',e=>{if(e.key==='Enter')joinRace()});
 // ---------- the crew: bios, powers and unlock challenges ----------
 const CREW=[
  {id:'mochi',name:'Mochi',kind:'Shih Tzu · The hero',power:'Explorer Shield',pdesc:'Her explorer backpack pops up a bubble shield that blocks one bump.',bio:'A brave little Shih Tzu who slipped her lead on Waggleton High Street and decided the open road to London was far too exciting to leave. She never goes anywhere without her explorer backpack.',slot:'Always on the team (green button).'},
- {id:'rook',name:'Rook',kind:'Pigeon · Courier',power:'Courier Dash',pdesc:'Rook grabs Mochi and rockets her forward: faster, untouchable, and Officer Grubb falls way behind.',bio:'The fastest wings in Manhattan. Rook knows every rooftop shortcut, lost an eye in a hot dog stand argument, and has never once lost a delivery.',slot:'Joins on Waggleton High Street (blue button).'},
+ {id:'rook',name:'Rook',kind:'Pigeon · Courier',power:'Courier Dash',pdesc:'Rook grabs Mochi and rockets her forward: faster, untouchable, and Officer Grubb falls way behind.',bio:'The fastest wings in Waggleton. Rook knows every rooftop shortcut, lost an eye in a hot dog stand argument, and has never once lost a delivery.',slot:'Joins on Waggleton High Street (blue button).'},
  {id:'bandit',name:'Bandit',kind:'Raccoon · Bin raider',power:'Lid Bash',pdesc:'For 5 seconds Mochi smashes straight through crates, bins and barriers without getting bumped.',bio:'King of the alleys, with a dented bin lid for a shield. Talks big, eats bigger, and is secretly the most loyal friend you will ever have.',ch:{st:'total',goal:150,text:'Collect 150 bones in total'}},
  {id:'nuts',name:'Nuts',kind:'Squirrel · Park scout',power:'Nut Magnet',pdesc:'Every bone in every lane flies straight to Mochi for 6 seconds.',bio:'A hyperactive park scout in flying goggles who has mapped every tree in the city. Speaks very fast and always knows a shortcut.',ch:{st:'best',goal:60,text:'Grab 60 bones in a single run'}},
  {id:'duchess',name:'Duchess',kind:'Persian cat · Charmer',power:'Charm',pdesc:'Duchess bats her eyes at Officer Grubb. Catcher Alert drops to zero and stays calm for 5 seconds.',bio:'A penthouse cat who wears real pearls. She pretends she is far too posh to help a street dog, then saves the day anyway.',ch:{st:'clean',goal:1,text:'Reach Muddlecombe without bumping into anything'}},
