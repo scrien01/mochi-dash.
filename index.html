@@ -271,7 +271,7 @@ function makeCart(){const c=document.createElement('canvas');c.width=640;c.heigh
   const im=new Image();im.src=c.toDataURL('image/png');return im}
 const SCN={
  L:{bg:'wag_bgL',BW:1360,BH:768,MX:660,GY:702,VPX:733,VPY:420,LANEBG:250,mochiH:165,floor:'wag_floorL',noHyd:1,FS:[[-5.78,-3.95,0,59],[-3.95,3.6,59,229],[3.6,5.9,229,305]],FPZ:81,FZ0:0,FTH:2720,SC:{tl:-3.7,tr:4.1,th:3.5,hy:3.3,hyH:.55},PS:1,LX:1,
-    WALLS:[{im:'wag_facL',l:-5.78,h:4.3,rate:278,z0:1.91,tw:2922,th:400},{im:'wag_facR',l:5.89,h:5.2,rate:332,z0:2.44,tw:4212,th:400}]},
+    WALLS:[{im:'wag_facL',l:-5.78,h:4.3,rate:278,z0:1.91,tw:2922,th:400},{im:'wag_facR',l:5.89,h:5.2,rate:332,z0:2.44,tw:4212,th:400}],OBW:{crate:.6,barrier:.85,bin:.38,cart:1.0},OBI:{crate:'wag_jump1',barrier:'wag_jump2',bin:'wag_tall',cart:'wag_big'},big:'cart'},
  P:{bg:'wag_bg',BW:1980,BH:1920,MX:957,GY:1647,VPX:957,VPY:791,LANEBG:1050,mochiH:550,floor:'wag_floor',noHyd:1,FS:[[-1.7,1.72,0,700]],FPZ:200,FZ0:3.3,FTH:720,
     WALLS:[{im:'wag_wall',l:-1.7,h:4.325,rate:170,z0:3.45,tw:1691,th:692},{im:'wag_fence',l:1.72,h:.9,rate:460,z0:3.35,tw:1600,th:424}],
     SC:{tl:null,tr:2.05,th:5.5,hy:1.5,hyH:.32,lamp:1.85},PS:1,LX:.55,
