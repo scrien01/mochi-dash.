@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <link rel="icon" href="data:,">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mochi: Big City Dash</title>
+<title>Waggleton Town</title>
 <meta name="description" content="Outrun the catcher. Rally the crew. Scroll through the world of Mochi the Shih Tzu.">
 <meta name="theme-color" content="#2a1206">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -120,13 +120,13 @@ body{overflow-x:clip}
 <div class="vig"></div>
 <div class="shade" id="shade"></div>
 
-<img id="logo" class="ui" src="t/p_logo.webp" alt="Mochi: Big City Dash">
+<img id="logo" class="ui" src="https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/1b56b6f6-c93e-4eb9-824e-cd611479e859.webp" alt="Waggleton Town">
 <button id="sound" class="ui" aria-pressed="false"><i><b></b><b></b><b></b></i><span>Sound off</span></button>
 <div id="hint" class="ui">Scroll to run<span></span></div>
 <div id="bar" class="ui"><i></i></div>
 
-<section class="ch top" id="c0" data-a="-1" data-b=".07"><img src="t/p_logo.webp" alt="Mochi: Big City Dash"><p>Outrun the catcher. Rally the crew.</p></section>
-<section class="ch bot" data-a=".1" data-b=".24"><span class="tag">Meet Mochi</span><h2 class="gt">One small dog. One big city.</h2><p>A Shih Tzu with a red topknot, an explorer backpack and a plan to see all of New York before teatime.</p></section>
+<section class="ch top" id="c0" data-a="-1" data-b=".07"><img src="https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/1b56b6f6-c93e-4eb9-824e-cd611479e859.webp" alt="Waggleton Town"><p>Outrun the catcher. Rally the crew.</p></section>
+<section class="ch bot" data-a=".1" data-b=".24"><span class="tag">Meet Mochi</span><h2 class="gt">One small dog. One big city.</h2><p>A Shih Tzu with a red topknot, an explorer backpack and a plan to see all of Waggleton before teatime.</p></section>
 <section class="ch top" data-a=".3" data-b=".44"><span class="tag">Uh-oh</span><h2 class="gt">Officer Grubb!</h2><p>A net, a whistle and a moustache like a broom. Every bump brings him closer.</p></section>
 <section class="ch bot" data-a=".52" data-b=".68"><span class="tag">Rally the crew</span><h2 class="gt">Nobody runs alone</h2><p>Seven street-smart friends, each with a power that turns the chase around.</p></section>
 <section class="ch top" data-a=".76" data-b=".94"><span class="tag">Courier Dash</span><h2 class="gt">Hop on, kid!</h2><p>Rook grabs Mochi by her backpack and flies her over the rooftops.</p></section>
@@ -162,11 +162,11 @@ body{overflow-x:clip}
       <a class="btn g" id="wa" href="#" target="_blank" rel="noopener">Share on WhatsApp</a>
       <button class="btn w" id="again">↺ Watch again</button>
     </div>
-    <p class="small">A Microdrama UK original · Coming to iPhone and Android</p>
+    <p class="small">A Scrien Games original · Coming to iPhone and Android</p>
   </section>
 </div>
 
-<div id="loader"><div class="in"><img src="t/p_logo.webp" alt="Mochi: Big City Dash"><div class="lbar"><i id="lfill"></i></div><div id="pct">0%</div>
+<div id="loader"><div class="in"><img src="https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/1b56b6f6-c93e-4eb9-824e-cd611479e859.webp" alt="Waggleton Town"><div class="lbar"><i id="lfill"></i></div><div id="pct">0%</div>
   <div id="go" class="row"><button class="btn" id="goS">▶ Enter with sound</button><button class="btn w" id="goQ">Enter quietly</button></div>
   <p id="ltip">Tip: Bins are too tall to jump. Dodge them!</p></div></div>
 
@@ -189,14 +189,14 @@ const CREW=[
  {id:'nuts',img:'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/edeef22b-ae2b-4684-826b-ee4fbc09a396.jpg',name:'Nuts',kind:'Squirrel · Park scout',power:'Nut Magnet',pd:'Every bone in every lane flies straight to Mochi.',bio:'A hyperactive park scout in flying goggles who has mapped every tree in the city.',ul:'Unlock: 60 bones in one run'},
  {id:'duchess',img:'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/ccbbc1af-627a-4b83-b13c-4f05fe5cf5b4.jpg',name:'Duchess',kind:'Persian cat · Charmer',power:'Charm',pd:'Bats her eyes at Officer Grubb. Catcher Alert drops to zero.',bio:'A penthouse cat in real pearls who pretends to be too posh to help, then saves the day.',ul:'Unlock: a run with no bumps'},
  {id:'tank',img:'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/8edc4331-3fbe-43a0-8085-a2488c29b209.jpg',name:'Tank',kind:'Newfoundland · Big muscle',power:'Bulldoze',pd:'Charges ahead and clears the way. Nothing can stop you.',bio:'A gentle giant and retired harbour rescue dog. Scared of exactly one thing: the vacuum.',ul:'Unlock: win 3 times'},
- {id:'pip',img:'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/55bdcc99-c903-4ed6-90e7-f15b1644f293.jpg',name:'Pip',kind:'Hamster · Speed demon',power:'Tiny Turbo',pd:'Mochi shrinks to hamster size and zips past every obstacle.',bio:'Escaped from a pet shop in a toy car. Tiny, loud, and sure he is the best driver in New York.',ul:'Unlock: 3 speed ramps in one run'},
+ {id:'pip',img:'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/55bdcc99-c903-4ed6-90e7-f15b1644f293.jpg',name:'Pip',kind:'Hamster · Speed demon',power:'Tiny Turbo',pd:'Mochi shrinks to hamster size and zips past every obstacle.',bio:'Escaped from a pet shop in a toy car. Tiny, loud, and sure he is the best driver in Waggleton.',ul:'Unlock: 3 speed ramps in one run'},
  {id:'grubb',img:'https://d2ol7oe51mr4n9.cloudfront.net/user_3513PNkieTiYszjdCoNd99lRg6G/39028aeb-7879-4560-a947-5f5d9c90c2e5.jpg',name:'Officer Grubb',kind:'Dog catcher · The villain',power:'The Net',pd:'Every bump fills his Catcher Alert. Hit 100% and he scoops you up.',bio:'Thirty years on the job and he has never caught a dog he could not lose again. This time it is personal.',ul:'Always one step behind',villain:1}];
 const crewEl=$('crew');
 CREW.forEach(c=>{const d=document.createElement('article');d.className='card'+(c.villain?' villain':'');
   d.innerHTML=`<div class="art"><img loading="lazy" alt="${c.name}" src="${c.img}" onerror="this.src='t/crew_${c.id}.webp'"></div><h3>${c.name}</h3><div class="k">${c.kind}</div><div class="pw"><b>${c.power}</b>${c.pd}</div><p>${c.bio}</p><span class="ul">${c.villain?'⚠':'🔓'} ${c.ul}</span>`;crewEl.appendChild(d)});
 const step=()=>crewEl.firstElementChild.getBoundingClientRect().width+18;
 $('prev').onclick=()=>crewEl.scrollBy({left:-step(),behavior:'smooth'});$('next').onclick=()=>crewEl.scrollBy({left:step(),behavior:'smooth'});
-$('wa').href='https://wa.me/?text='+encodeURIComponent('Run with Mochi! 🐶 Mochi: Big City Dash. Watch the world and play the prototype: '+location.href.split('#')[0]);
+$('wa').href='https://wa.me/?text='+encodeURIComponent('Run with Mochi! 🐶 Waggleton Town. Watch the world and play the prototype: '+location.href.split('#')[0]);
 $('again').onclick=()=>scrollTo({top:0,behavior:reduce?'auto':'smooth'});
 
 /* ---- load the film fully first (progress bar), so scrubbing never stalls ---- */
